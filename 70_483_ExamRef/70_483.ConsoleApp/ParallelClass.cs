@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace _70_483.ConsoleApp
 {
-     public  static class ParallelEntity
+     public  static class ParallelClass
     {
         public static void Task1()
         {
@@ -33,6 +33,14 @@ namespace _70_483.ConsoleApp
         {
             public string Name { get; set; }
             public string City { get; set; }
+        }
+
+        public static bool CheckCity(string name)
+        {
+            if (name == null)
+                throw new ArgumentException(name);
+
+            return name == "Seattle";
         }
     }
 }
