@@ -40,7 +40,14 @@ namespace _70_483.ConsoleApp
             Console.WriteLine("11) WaitAll / WaitAny");
             Console.WriteLine("12)  Continuation Task");
             Console.WriteLine("13)  Continuation Task Exception");
+            Console.WriteLine("14)  Attached Child");
 
+            Console.WriteLine("15)  Thread1");
+            Console.WriteLine("16)  ThreadStart Old .NET"); // ThreadStart delegate old .net versions
+            Console.WriteLine("17)  Thread Lambda ");
+            Console.WriteLine("18)  Thread Parametrized pm");
+            Console.WriteLine("19)  Thread Parametrized Lambda ");
+            Console.WriteLine("20)  Thread Abort ");
             Console.WriteLine("99) EXIT");
             Console.Write("\r\nSelect an option: ");
 
@@ -223,7 +230,7 @@ namespace _70_483.ConsoleApp
                     // use de dafault task scheduler the .net uses THREAD POOL
                     Task<int> task = Task.Run(() =>
                     {
-                        return ThreadClass.CalculateResult();
+                        return TaskClass.CalculateResult();
                     });
                     Console.WriteLine( task.Result);
                     Console.WriteLine("Finishing return");
@@ -245,11 +252,12 @@ namespace _70_483.ConsoleApp
                     {
                         int taskNum = i; // make a local copy of the loop counter so that
                                          // correct task number is passed into the lambda expression
-                        tasks[i] = Task.Run(() => ThreadClass.DoWork(taskNum));
+                        tasks[i] = Task.Run(() => TaskClass.DoWork(taskNum));
                     }
 
                     Task.WaitAll(); // wait for all, task to end
                                     //  Task.WaitAny(); // wait for any
+                   
 
                     Console.WriteLine("Finishing WAIT");
                     Console.ReadKey();
@@ -258,8 +266,8 @@ namespace _70_483.ConsoleApp
                 case "12":
                     // Continuation Task     
 
-                    Task task12 = Task.Run(() => ThreadClass.HelloTask());
-                    task12.ContinueWith((prevTask) => ThreadClass.WorldTask());
+                    Task task12 = Task.Run(() => TaskClass.HelloTask());
+                    task12.ContinueWith((prevTask) => TaskClass.WorldTask());
                     
                     Console.WriteLine("Finishing return");
                     Console.ReadKey();
@@ -268,13 +276,142 @@ namespace _70_483.ConsoleApp
                 case "13":
                     // Continuation Task Failure     
 
-                    Task task13 = Task.Run(() => ThreadClass.HelloTaskFailure());
+                    Task task13 = Task.Run(() => TaskClass.HelloTaskFailure());
 
-                    task13.ContinueWith((prevTask) => ThreadClass.WorldTask(), TaskContinuationOptions.OnlyOnRanToCompletion);
+                    task13.ContinueWith((prevTask) => TaskClass.WorldTask(), TaskContinuationOptions.OnlyOnRanToCompletion);
 
-                    task13.ContinueWith((prevTask) => ThreadClass.ExceptionTask(), TaskContinuationOptions.OnlyOnFaulted);
+                    task13.ContinueWith((prevTask) => TaskClass.ExceptionTask(), TaskContinuationOptions.OnlyOnFaulted);
 
                     Console.WriteLine("Finishing TASK FAILURE");
+                    Console.ReadKey();
+                    return true;
+
+                case "14":
+                    //Attached Child 
+
+                    var parent = Task.Factory.StartNew(() =>
+                    {
+                        Console.WriteLine("Parents Starts");
+                        for (int i = 0; i < 10; i++)
+                        {
+                            int taskNo = i;
+                            Task.Factory.StartNew((x) =>
+                             TaskClass.DoChild(x),
+                             taskNo,
+                             TaskCreationOptions.AttachedToParent);
+                        }
+                    });
+
+                    parent.Wait();
+
+                    Console.WriteLine("Finishing PARENT");
+                    Console.ReadKey();
+                    return true;
+
+                case "15":
+                    //Thread 1 
+
+                   Thread thread = new Thread(ThreadClass.ThreadHello);
+                   thread.Start();
+
+                    Console.WriteLine("Finishing ThreadStart  ");
+                    Console.ReadKey();
+                    return true;
+
+                case "16":
+                    //ThreadStart Old .NET 
+
+                    ThreadStart ts = new ThreadStart(ThreadClass.ThreadHello);
+                    Thread thread16 = new Thread(ts);
+                    thread16.Start();
+
+                    Console.WriteLine("Finishing ThreadStart Old .NET ");
+                    Console.ReadKey();
+                    return true;
+
+                case "17":
+                    //Thread Lambda Expression
+
+                    Thread thread17 = new Thread(() =>
+                    {
+                        
+                        Thread.Sleep(2000);
+                        Console.WriteLine("Hello from Thread");
+                    });
+
+                    thread17.Start();
+
+                    Console.WriteLine("Finishing Thread Lambda Expression");
+                    Console.ReadKey();
+                    return true;
+
+
+                case "18":
+                    //Parametrized Data
+
+                    ParameterizedThreadStart pm = new ParameterizedThreadStart(ThreadClass.WorkOnData);
+                    Thread thread18 = new Thread(pm);
+                    thread18.Start(99);
+
+                    Console.WriteLine("Finishing Parametrized Data");
+                    Console.ReadKey();
+                    return true;
+
+
+                case "19":
+                    //Parametrized Data Lambda
+
+                    Thread thread19 = new Thread((data) =>
+                    {
+                        Console.WriteLine("Working on: {0}", data);
+                        Thread.Sleep(2000);
+                    });
+
+                    thread19.Start(19);
+
+                    Console.WriteLine("Finishing Parametrized Data Lambda");
+                    Console.ReadKey();
+                    return true;
+
+                case "20":
+                    //Abort Thread 
+                    Thread thread20 = new Thread(() =>
+                    {
+                        while (true)
+                        {
+                            Console.WriteLine("Tick");
+                            Thread.Sleep(1000);
+                        }
+                    });
+
+                    thread20.Start();
+                    Console.WriteLine("Press any key");
+                    Console.ReadKey();
+                    thread20.Abort();
+
+                    Console.WriteLine("Finishing Abort");
+                    Console.ReadKey();
+                    return true;
+
+                case "21":
+                    //Abort Thread Correct
+                    bool tickRunning = true;
+
+
+                    Thread thread21 = new Thread(() =>
+                    {
+                        while (tickRunning) // this is better that the previous example, it stops before doing some tasks
+                        {
+                            Console.WriteLine("Tick");
+                            Thread.Sleep(1000);
+                        }
+                    });
+
+                    thread21.Start();
+                    Console.WriteLine("Press any key");
+                    tickRunning = true;
+
+                    Console.WriteLine("Finishing Abort");
                     Console.ReadKey();
                     return true;
 

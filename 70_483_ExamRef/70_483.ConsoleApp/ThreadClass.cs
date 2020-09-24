@@ -9,47 +9,16 @@ namespace _70_483.ConsoleApp
 {
      public class ThreadClass
     {
-        public static int CalculateResult()
+        public static void ThreadHello()
         {
-            Console.WriteLine("Work starting");
+            Console.WriteLine("Hello from the thread");
             Thread.Sleep(2000);
-            Console.WriteLine("Work finished");
-            return 99;
         }
 
-        public static void DoWork(int i)
+        public static void WorkOnData(object data)
         {
-            Console.WriteLine("Task {0} starting" , i);
+            Console.WriteLine("Working on: {0}", data  )   ;
             Thread.Sleep(2000);
-            Console.WriteLine("Task {0} finishing", i);
         }
-
-        // continuation 
-
-        public static void HelloTask()
-        {
-            Thread.Sleep(1000);
-            Console.WriteLine("Hello");
-        }
-
-        public static void WorldTask()
-        {
-            Thread.Sleep(1000);
-            Console.WriteLine("World");
-        }
-
-        // error
-        public static void HelloTaskFailure()
-        {
-            Thread.Sleep(1000);
-            Console.WriteLine("WorldTaskFailure");
-            throw new Exception();  // 
-        }
-        public static void ExceptionTask()
-        {
-            Thread.Sleep(1000);
-            Console.WriteLine("Exceptionn");
-        }
-        // end continuation 
     }
 }
