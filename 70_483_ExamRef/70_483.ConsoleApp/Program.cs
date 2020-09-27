@@ -48,6 +48,12 @@ namespace _70_483.ConsoleApp
             Console.WriteLine("18)  Thread Parametrized pm");
             Console.WriteLine("19)  Thread Parametrized Lambda ");
             Console.WriteLine("20)  Thread Abort ");
+            Console.WriteLine("21)  Thread Abort Variable ");
+            Console.WriteLine("22)  Thread Syncronization using Join ");
+            Console.WriteLine("23)  Thread Data Storage and ThreadLocal");
+            Console.WriteLine("24)  Thread Execution Context");
+            Console.WriteLine("25)  Thread Pool");
+
             Console.WriteLine("99) EXIT");
             Console.Write("\r\nSelect an option: ");
 
@@ -394,9 +400,8 @@ namespace _70_483.ConsoleApp
                     return true;
 
                 case "21":
-                    //Abort Thread Correct
+                    //Abort Thread Correct ,using a variable
                     bool tickRunning = true;
-
 
                     Thread thread21 = new Thread(() =>
                     {
@@ -408,13 +413,96 @@ namespace _70_483.ConsoleApp
                     });
 
                     thread21.Start();
-                    Console.WriteLine("Press any key");
-                    tickRunning = true;
+                    Console.WriteLine("Press any key to stop the clock");
+                    Console.ReadKey();
+                    tickRunning = false;
 
-                    Console.WriteLine("Finishing Abort");
+                    Console.WriteLine("Finishing Abort Thread Correct ,using a variable");
                     Console.ReadKey();
                     return true;
 
+                case "22":
+                    //Thread Syncronization using Join
+
+                    Thread threadToWaitFor = new Thread(() =>
+                    {
+                        Console.WriteLine("Thread Starting");
+                        Thread.Sleep(2000);
+                        Console.WriteLine("Thread done");
+                    });
+
+                    threadToWaitFor.Start();
+                    Console.WriteLine("Joining Thread");
+                    threadToWaitFor.Join();
+                    Console.WriteLine("Press a key to exit");
+                    Console.ReadKey();
+                    
+                    Console.WriteLine("Finishing Thread Syncronization using Join");
+                    Console.ReadKey();
+                    return true;
+
+                case "23":
+                    //Thread Data Storage and ThreadLocal
+
+                    Thread t1 = new Thread(() =>
+                    {
+                        for (int i = 0; i < 5; i++)
+                        {
+                            Console.WriteLine("t1: {0}", ThreadClass.randomGenerator.Value.Next(10));
+                            Thread.Sleep(500);
+                        }
+                    });
+
+                    Thread t2 = new Thread(() =>
+                    {
+                        for (int i = 0; i < 5; i++)
+                        {
+                            Console.WriteLine("t2: {0}", ThreadClass.randomGenerator.Value.Next(10));
+                            Thread.Sleep(500);
+                        }
+                    });
+
+                    t1.Start();
+                    t2.Start();
+                    Console.ReadKey();
+
+                    Console.WriteLine("Finishing Thread Data Storage and ThreadLocal");
+                    Console.ReadKey();
+                    return true;
+
+                case "24":
+                    //Thread Execution Context
+
+                    Thread.CurrentThread.Name = "Main Method";
+                    ThreadClass.DisplayThread(Thread.CurrentThread);
+
+                    Console.WriteLine("Finishing Thread Execution Context");
+                    Console.ReadKey();
+                    return true;
+
+                case "25":
+                    //Thread Pool
+                    // ThreadPool does not overwhelm a device. 
+                    // extra threads are out in the queue.
+
+                    // not good :
+                    /*
+                      -largen number of thread that MAY BE IDLE for very long time -> block the threadPool
+                      
+                      -cannot manage priority of threads in the threadPool
+                      -Threads in threadPOOL have a background Pririty
+                      - Local state variables are not cleared when a ThreadPool thread is REUSED.
+                        They should not be used.
+                      */
+                    for (int i = 0; i < 10; i++)
+                    {
+                        int stateNumber = i;
+                        ThreadPool.QueueUserWorkItem(state => ThreadClass.DoWork(stateNumber));  
+                    }
+
+                    Console.WriteLine("Finishing Thread Pool");
+                    Console.ReadKey();
+                    return true;
                 case "99":
                     Environment.Exit(0);
                     return true;
