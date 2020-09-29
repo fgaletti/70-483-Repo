@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -53,6 +54,11 @@ namespace _70_483.ConsoleApp
             Console.WriteLine("23)  Thread Data Storage and ThreadLocal");
             Console.WriteLine("24)  Thread Execution Context");
             Console.WriteLine("25)  Thread Pool");
+
+            Console.WriteLine("26)  BlockingCollection");
+            Console.WriteLine("27)  ConcurrentQueue");
+            Console.WriteLine("28)  ConcurrentStack");
+            Console.WriteLine("29)  ConcurrentBag");
 
             Console.WriteLine("99) EXIT");
             Console.Write("\r\nSelect an option: ");
@@ -367,9 +373,9 @@ namespace _70_483.ConsoleApp
                 case "19":
                     //Parametrized Data Lambda
 
-                    Thread thread19 = new Thread((data) =>
+                    Thread thread19 = new Thread((data19) =>
                     {
-                        Console.WriteLine("Working on: {0}", data);
+                        Console.WriteLine("Working on: {0}", data19);
                         Thread.Sleep(2000);
                     });
 
@@ -433,7 +439,7 @@ namespace _70_483.ConsoleApp
 
                     threadToWaitFor.Start();
                     Console.WriteLine("Joining Thread");
-                    threadToWaitFor.Join();
+                    threadToWaitFor.Join(); //join to MAIN THREAD
                     Console.WriteLine("Press a key to exit");
                     Console.ReadKey();
                     
@@ -501,6 +507,113 @@ namespace _70_483.ConsoleApp
                     }
 
                     Console.WriteLine("Finishing Thread Pool");
+                    Console.ReadKey();
+                    return true;
+
+                case "26":
+                    //BlockingCollection
+                    BlockingCollection<int> data = new BlockingCollection<int>(5);
+
+                    Task.Run(() =>
+                    {
+                        // attemp to add 20 items to the collectionn - blocks after 5th
+                        for (int i = 0; i < 11; i++)
+                        {
+                            data.Add(i);
+                            Console.WriteLine("Data {0} added succefully", i);
+                        }
+                        data.CompleteAdding();
+                    });
+
+                    Console.ReadKey();
+                    Console.WriteLine("Reading Collection");
+
+                    Task.Run(() =>
+                    {
+                        while (!data.IsCompleted)
+                        {
+                            try
+                            {
+                                int v = data.Take();
+                                Console.WriteLine("Data {0} TAKEN succefully", v);
+                            }
+                            catch (InvalidOperationException)
+                            {
+
+                                throw;
+                            }
+                        }
+                    });
+
+                    Console.ReadKey();
+                    Console.WriteLine("Finishing BlockingCollection");
+                    Console.ReadKey();
+                    return true;
+
+                case "27":
+                    //ConcurrentQueue
+                    ConcurrentQueue<string> queue = new ConcurrentQueue<string>();
+                    queue.Enqueue("Rob");
+                    queue.Enqueue("Niles");
+
+                    string str;
+                    if (queue.TryPeek(out str)) // top
+                    {
+                        Console.WriteLine("Peek: {0}", str);
+                    }
+                  
+                    if (queue.TryDequeue(out str)) // first in-first out (Rob is first)
+                    {
+                        Console.WriteLine("Dequeue: {0}", str);
+                    }
+
+                    Console.ReadKey();
+                    Console.WriteLine("Finishing ConcurrentQueue");
+                    Console.ReadKey();
+                    return true;
+
+                case "28":
+                    //ConcurrentStack
+                    ConcurrentStack<string> stack = new ConcurrentStack<string>();
+                    stack.Push("Rob");
+                    stack.Push("Miles");
+                   
+                    string str28;
+                    if (stack.TryPeek(out str)) // top
+                    {
+                        Console.WriteLine("Peek: {0}", str);
+                    }
+
+                    if (stack.TryPop(out str)) // LAST in-first out (Rob is first)
+                    {
+                        Console.WriteLine("Dequeue: {0}", str);
+                    }
+
+                    Console.ReadKey();
+                    Console.WriteLine("Finishing ConcurrentStack");
+                    Console.ReadKey();
+                    return true;
+
+                case "29":
+                    //ConcurrentBag
+                    ConcurrentBag<string> bag= new ConcurrentBag<string>();
+                    bag.Add("Rob");
+                    bag.Add("Miles");
+                    bag.Add("Hull");
+
+                    string str29;
+                    if (bag.TryPeek(out str)) // no garantie 
+                    {
+                        Console.WriteLine("Peek: {0}", str);
+                    }
+
+                    if (bag.TryTake(out str)) // no garantie 
+                    {
+                        Console.WriteLine("Dequeue: {0}", str);
+                    }
+
+                    Console.ReadKey();
+                    Console.WriteLine("Finishing ConcurrentBag");
                     Console.ReadKey();
                     return true;
                 case "99":
