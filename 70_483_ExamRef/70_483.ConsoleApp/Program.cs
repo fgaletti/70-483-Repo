@@ -59,6 +59,9 @@ namespace _70_483.ConsoleApp
             Console.WriteLine("27)  ConcurrentQueue");
             Console.WriteLine("28)  ConcurrentStack");
             Console.WriteLine("29)  ConcurrentBag");
+            Console.WriteLine("30)  ConcurrentDictionary");
+
+            Console.WriteLine("31)  BlockingCollection 2");
 
             Console.WriteLine("99) EXIT");
             Console.Write("\r\nSelect an option: ");
@@ -433,13 +436,15 @@ namespace _70_483.ConsoleApp
                     Thread threadToWaitFor = new Thread(() =>
                     {
                         Console.WriteLine("Thread Starting");
-                        Thread.Sleep(2000);
+                        Thread.Sleep(4000);
                         Console.WriteLine("Thread done");
                     });
 
                     threadToWaitFor.Start();
                     Console.WriteLine("Joining Thread");
-                    threadToWaitFor.Join(); //join to MAIN THREAD
+                    threadToWaitFor.Join(); //join to MAIN THREAD  is this line is comment 
+                                            // main thread accept Readkey and  threadToWaitFor
+                                            // would be running in the background
                     Console.WriteLine("Press a key to exit");
                     Console.ReadKey();
                     
@@ -512,6 +517,7 @@ namespace _70_483.ConsoleApp
 
                 case "26":
                     //BlockingCollection
+                    //
                     BlockingCollection<int> data = new BlockingCollection<int>(5);
 
                     Task.Run(() =>
@@ -577,7 +583,8 @@ namespace _70_483.ConsoleApp
                     ConcurrentStack<string> stack = new ConcurrentStack<string>();
                     stack.Push("Rob");
                     stack.Push("Miles");
-                   
+                    stack.Push("Hull");
+
                     string str28;
                     if (stack.TryPeek(out str)) // top
                     {
@@ -596,6 +603,8 @@ namespace _70_483.ConsoleApp
 
                 case "29":
                     //ConcurrentBag
+                    // when the order in which they are added/removed 
+                    // is not important
                     ConcurrentBag<string> bag= new ConcurrentBag<string>();
                     bag.Add("Rob");
                     bag.Add("Miles");
@@ -614,6 +623,44 @@ namespace _70_483.ConsoleApp
 
                     Console.ReadKey();
                     Console.WriteLine("Finishing ConcurrentBag");
+                    Console.ReadKey();
+                    return true;
+
+                case "30":
+                    //ConcurrentDictionary
+                    // 
+
+                    ConcurrentDictionary<string, int> ages = new ConcurrentDictionary<string, int>();
+                    if (ages.TryAdd("Rob", 21))
+                        Console.WriteLine("Rob Added");
+
+                    Console.WriteLine("Robs age: {0}", ages["Rob"]);
+
+                    if (ages.TryUpdate("Rob", 22, 21))
+                        Console.WriteLine("Age updated");
+
+                    Console.WriteLine("Robs NEW age: {0}", ages["Rob"]);
+
+                    //Increment Robs age automacally using factory method
+                    Console.WriteLine("Robs age udpated to {0} :",
+                        ages.AddOrUpdate("Rob", 1, (name, age) => age = age + 1));
+
+                    Console.WriteLine("Robs new age: {0} ", ages["Rob"]);
+
+                    Console.ReadKey();
+                    Console.WriteLine("Finishing ConcurrentDictionary");
+                    Console.ReadKey();
+                    return true;
+
+                case "31":
+                    //ConcurrentDictionary 2
+                    // 
+                     TaskClass.BC_AddTakeCompleteAdding();
+                    //TaskClass.BC_TryTake();
+
+
+                    Console.ReadKey();
+                    Console.WriteLine("Finishing ConcurrentDictionary");
                     Console.ReadKey();
                     return true;
                 case "99":
