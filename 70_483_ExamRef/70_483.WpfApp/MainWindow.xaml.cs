@@ -104,6 +104,8 @@ namespace _70_483.WpfApp
 
 
             listUrls = await FetchWebPages(arrayUrls);
+            bool returnToMainThread = true;
+
 
         }
     }

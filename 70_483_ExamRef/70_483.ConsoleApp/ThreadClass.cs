@@ -11,6 +11,7 @@ namespace _70_483.ConsoleApp
     {
         public static void ThreadHello()
         {
+            Thread.Sleep(3000);
             Console.WriteLine("Hello from the thread");
             Thread.Sleep(2000);
         }

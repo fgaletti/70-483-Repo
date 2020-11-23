@@ -283,7 +283,9 @@ namespace _70_483.ConsoleApp
 
                     Task task12 = Task.Run(() => TaskClass.HelloTask());
                     task12.ContinueWith((prevTask) => TaskClass.WorldTask());
-                    
+
+                    task12.ContinueWith((prevTask) => TaskClass.WorldTask());
+
                     Console.WriteLine("Finishing return");
                     Console.ReadKey();
                     return true;
@@ -435,14 +437,24 @@ namespace _70_483.ConsoleApp
 
                     Thread threadToWaitFor = new Thread(() =>
                     {
-                        Console.WriteLine("Thread Starting");
-                        Thread.Sleep(4000);
-                        Console.WriteLine("Thread done");
+                        // book 1
+                        //Console.WriteLine("Thread Starting");
+                        //Thread.Sleep(4000);
+                        //Console.WriteLine("Thread done");
+
+                        // c#
+                        for (int i = 0; i < 1000; i++)
+                        {
+                            Console.Write("y");
+                        }
+                        Console.WriteLine("waiting..");
+                        Thread.Sleep(2000);
                     });
 
                     threadToWaitFor.Start();
+                    threadToWaitFor.Join(); // before write Line, now should wait for For to end
                     Console.WriteLine("Joining Thread");
-                    threadToWaitFor.Join(); //join to MAIN THREAD  is this line is comment 
+                   // threadToWaitFor.Join(); //join to MAIN THREAD  is this line is comment 
                                             // main thread accept Readkey and  threadToWaitFor
                                             // would be running in the background
                     Console.WriteLine("Press a key to exit");
