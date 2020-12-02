@@ -32,7 +32,7 @@ namespace _70_483.ConsoleApp
             Console.Clear();
             Console.WriteLine("Choose an option:");
             Console.WriteLine("1) Action Delegate ");
-            Console.WriteLine("2) ");
+            Console.WriteLine("2) Aggregate Exceptions ");
             
 
             Console.WriteLine("99) EXIT");
@@ -53,7 +53,25 @@ namespace _70_483.ConsoleApp
                     return true;
                
                 case "2":
-               
+                    //exceptions
+                    string location2 = "Chicago";
+                    Alarm alarm2 = new Alarm();
+                    alarm2.OnAlarmRaised += Methods.AlarmListener1Exception;
+                    alarm2.OnAlarmRaised += Methods.AlarmListener2Exception;
+                   // alarm2.RaiseAlarmExceptions(location2);
+
+                    try
+                    {
+                        alarm2.RaiseAlarmExceptions("Kitchen");
+                    }
+                    catch (AggregateException agg)
+                    {
+                        foreach (Exception exception in agg.InnerExceptions)
+                        {
+                            Console.WriteLine(exception.Message);
+                        }
+                    }
+
                     Console.WriteLine("Finishing Processing");
                     Console.ReadKey();
                     return true;

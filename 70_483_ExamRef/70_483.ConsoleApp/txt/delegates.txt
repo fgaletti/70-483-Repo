@@ -73,7 +73,17 @@ Delagates
 	    public void AlarmListerern1(object sender, EventsArgs e)
 	      ...
 
-	EventsArgs : provide info about theevent
+	EventsArgs : provide info about the event
 		EventArgs.Empty does not produce any data
 
+  EXCEPTIONS
 
+     Event handled can be called individually andf then a single Aggregate
+		Eception created with details
+
+	-GETINVOCATIONLIST ->
+	       Used on the delegate to obtain a list of subscribers to the event
+
+		  -> DynamicInvoke -> called for each subscriber
+
+			 ->TypeInvocationException 

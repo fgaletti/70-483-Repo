@@ -20,5 +20,18 @@ namespace _70_483.ConsoleApp
         {
             Console.WriteLine("Alarm listener 2 called");
         }
+
+        public static void AlarmListener1Exception(object source, AlarmEventArgs args)
+        {
+            Console.WriteLine("Alarm listener 1 called");
+            Console.WriteLine("Alarm in {0}", args.Location);
+            throw new Exception("Bang");
+        }
+
+        public static void AlarmListener2Exception(object source, AlarmEventArgs args)
+        {
+            Console.WriteLine("Alarm listener 2 called");
+            throw new Exception("boom");
+        }
     }
 }

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -43,6 +44,29 @@ namespace _70_483.ConsoleApp
                 OnAlarmRaised(this, new AlarmEventArgs(location));
 
             }
+        }
+
+        public void RaiseAlarmExceptions(string location)
+
+        {
+
+            List<Exception> exceptionList = new List<Exception>();
+
+            foreach (Delegate handler in OnAlarmRaised.GetInvocationList() )
+            {
+                try
+                {
+                    handler.DynamicInvoke(this, new AlarmEventArgs(location));
+                }           
+                catch (TargetInvocationException e)
+                {
+                    exceptionList.Add(e.InnerException);
+
+                  }
+            }
+
+            if (exceptionList.Count > 0)
+                throw new AggregateException(exceptionList);
         }
     }
 }
