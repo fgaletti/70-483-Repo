@@ -97,9 +97,7 @@ namespace _70_483.ConsoleApp
                     Console.ReadKey();
                     return true;
 
-                case "99":
-                    Environment.Exit(0);
-                    return true;
+              
                 case "99":
                     Environment.Exit(0);
                     return true;
