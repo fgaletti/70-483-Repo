@@ -1,0 +1,79 @@
+Delagates
+
+
+ Action delegates -> represent a reference to a method that do not return a value
+     
+   Alarm
+	public Action OnAlarmRised {get; set}
+	
+   public void RaisedAlarm()
+	{
+	   if (OnAlarmRised  !- null)
+	   	OnAlarmRised ();
+	}	
+
+  -Program
+	
+	void AlarListener1 ()
+	 {
+	    write" alarm1"
+	}
+
+	void AlarListener2 ()
+	 {
+	    write" alarm2"
+	}
+
+	MAIN
+	 {
+	    Alarm alarm = new Alarm();
+	    alarm.OnAlarmRised  +=  AlarListener1 ;
+	    alarm.OnAlarmRised  +=  AlarListener2 ;
+			
+	    // Rais the Alarm
+	   alarm.RaisedAlarm();
+           write" alarm Raised"
+	 }
+
+
+ Events: anyone can call public delegate
+
+  *adding event Before Action 
+	-> Now is a DataField (not a property)
+ 
+	->Delefate can only be called from within the class
+
+	public event Action OnAlarmRaised = delegate
+	
+	void RaisedAlarm()
+	 {
+	   OnAlarmRaised();
+	
+	
+     EVENTS WITH BUILT-IN DELEGATES TYPES
+
+	-Programs that use events should use the EventHandler Class instead of action
+	
+	EventHandler Class : DESING TO allo subscribers to be given data about an event
+           -> can deliver data
+
+	Class Alart
+	  public event EventHandler OnAlarmRaised = delegate {}
+
+	  void RaisedAlarm()
+	 {
+	   OnAlarmRaised(this, EventArgs.Empty);
+	}
+
+	 }
+
+	Class Program
+	 {
+	    //accept t2o parameters
+	    public void AlarmListerern1(object sender, EventsArgs e)
+	      ...
+
+	EventsArgs : provide info about theevent
+		EventArgs.Empty does not produce any data
+
+
