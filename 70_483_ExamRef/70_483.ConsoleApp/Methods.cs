@@ -9,8 +9,26 @@ namespace _70_483.ConsoleApp
     //static methods called from the examples
     class Methods
     {
-//        public static void AlarmListener1()
-       public static void AlarmListener1(object source, AlarmEventArgs args)
+        // 3. delegates
+       public  delegate int IntOperation(int a, int b);
+
+        public static int Add (int a, int b)
+        {
+            //IntOperation intOP = new IntOperation(Substract);
+            //int resta = intOP(2, 4);
+            Console.WriteLine("Add called");
+            return a + b;
+
+
+        }
+        public static int Substract(int a, int b)
+        {
+            Console.WriteLine("Substract called");
+            return a - b;
+        }
+
+        //        public static void AlarmListener1()
+        public static void AlarmListener1(object source, AlarmEventArgs args)
         {
             Console.WriteLine("Alarm listener 1 called");
             Console.WriteLine("Alarm in {0}", args.Location);

@@ -33,8 +33,8 @@ namespace _70_483.ConsoleApp
             Console.WriteLine("Choose an option:");
             Console.WriteLine("1) Action Delegate ");
             Console.WriteLine("2) Aggregate Exceptions ");
-            
-
+            Console.WriteLine("3) Create Delgates");
+            Console.WriteLine("4 ) Lambda");
             Console.WriteLine("99) EXIT");
             Console.Write("\r\nSelect an option: ");
 
@@ -76,7 +76,28 @@ namespace _70_483.ConsoleApp
                     Console.ReadKey();
                     return true;
 
-              
+                case "3":
+                    //create delegates
+
+                    var ope = new Methods.IntOperation(Methods.Add);
+                    ope(2, 3);
+                    Console.WriteLine("Finishing Processing");
+                    Console.ReadKey();
+                    return true;
+
+                case "4":
+                    //lambda
+
+                    SetLocalInt();
+
+                    // no lambda
+                    GetValue getValueFunction = new GetValue(GetLocalNoLambda);
+                    int returnInt = getValueFunction();
+
+                    Console.WriteLine("Finishing Lambda");
+                    Console.ReadKey();
+                    return true;
+
                 case "99":
                     Environment.Exit(0);
                     return true;
@@ -85,8 +106,26 @@ namespace _70_483.ConsoleApp
             }
         }
 
-   
+        delegate int GetValue();
+        static GetValue getLocalInt;
 
+
+        static void SetLocalInt()
+        {
+            // Local variable set to 99
+            int localInt = 99;
+            // Set delegate getLocalInt to a lambda expression that
+            // returns the value of localInt
+            //getLocalInt = () => Console.WriteLine("Inside Lambda");  localInt;
+            getLocalInt = () => { Console.WriteLine("Inside Lambda"); return localInt; };
+
+        }
+
+        static int GetLocalNoLambda()
+        {
+            Console.WriteLine("GetLocalNoLambda"   );
+            return 109;
+        }
 
 
     }

@@ -87,3 +87,41 @@ Delagates
 		  -> DynamicInvoke -> called for each subscriber
 
 			 ->TypeInvocationException 
+
+
+	CREATE DELEGATES
+
+	-   public  delegate int IntOperation(int a, int b);
+
+	 public static int Substract(int a, int b)
+        {
+            Console.WriteLine("Substract called");
+            return a - b;
+        }
+
+		MAIN
+		 {
+		    IntOperation intOP = new IntOperation(Substract);
+            int resta = intOP(2, 4);
+		 }
+
+	LAMBDA
+	
+
+		 IntOperation add = (a, b) => a + b;
+	
+
+	CLOSURES
+
+	   -The code in a lambda expression can access variables in the code around it. These variables must be available when the lambda expression runs, so the compiler will extend the lifetime of variables used in lambda expressions.
+
+	BUILT IN TYPES WITH LAMBDA EXPRESIONS
+
+	delegate int IntOperation(int a, int b);
+	IntOperation add = (a, b) => a + b;
+	Console.WriteLIne(add(2,2);
+
+	There are a number of “built-in” delegate types that we can use to provide a context for a lambda expression.
+
+       Func<int,int,int> add = (a, b) => a + b;
+
