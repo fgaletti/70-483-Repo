@@ -35,6 +35,7 @@ namespace _70_483.ConsoleApp
             Console.WriteLine("2) Aggregate Exceptions ");
             Console.WriteLine("3) Create Delgates");
             Console.WriteLine("4 ) Lambda");
+            Console.WriteLine("5 ) Func");
             Console.WriteLine("99) EXIT");
             Console.Write("\r\nSelect an option: ");
 
@@ -98,6 +99,15 @@ namespace _70_483.ConsoleApp
                     Console.ReadKey();
                     return true;
 
+                case "5":
+                    //Func
+
+                    
+
+                    Console.WriteLine("Finishing Lambda");
+                    Console.ReadKey();
+                    return true;
+
                 case "99":
                     Environment.Exit(0);
                     return true;
@@ -106,6 +116,16 @@ namespace _70_483.ConsoleApp
             }
         }
 
+        // 5 --- funcv
+        Func<int> numberIn;
+
+        static double ReturnSquareFunc(int number)
+        {
+            return Math.Sqrt(number);
+        }
+        // ------------
+
+        // 4 
         delegate int GetValue();
         static GetValue getLocalInt;
 
@@ -126,6 +146,8 @@ namespace _70_483.ConsoleApp
             Console.WriteLine("GetLocalNoLambda"   );
             return 109;
         }
+        // --- end 4
+
 
 
     }

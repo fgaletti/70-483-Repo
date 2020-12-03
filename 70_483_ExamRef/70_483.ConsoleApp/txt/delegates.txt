@@ -125,3 +125,8 @@ Delagates
 
        Func<int,int,int> add = (a, b) => a + b;
 
+	   Func -> Encapsulates a method that has one parameter and returns a value of the type specified by the TResult parameter.
+
+	   **Multicast : a delegate instance can reference not just a single method , but also a list of target methods
+
+	   delegaets are Inmutable : + : creating a new instance of a delegate
