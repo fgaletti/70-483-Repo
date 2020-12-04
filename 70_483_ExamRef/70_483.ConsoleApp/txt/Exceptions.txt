@@ -1,0 +1,35 @@
+﻿
+StackTrace -> gives the position in the program at which the error occurred.
+The HelpLink  -> property can be set to give further information about the exception.
+
+The TargetSite -> property gives the name of the method that causes the exception
+
+Source -> property gives the name of the application that caused the error
+
+
+Throwing an exception
+
+   -> throw new Exception ( "I think you should know that I'm feeling very depressed.");
+
+
+RE-THROW:
+   throw ex; // this will not preserve the original stack trace
+
+   throw -> OK
+
+
+INNER EXCEPTIONS
+
+  Another way to manage the propagation of error conditions in an application is to pass the original exception object as an inner exception for a higher-level exception handler to deal with.
+  - The Exception class contains an InnerException property that can be set when the exception is constructed.
+
+ - throw new Exception("Something bad happened", ex);
+
+
+ -------
+ WHEN 
+ catch (WebException ex) when (ex.Status == WebExceptionStatus.ProtocolError)
+{
+   //code specifically for a WebException ProtocolError
+}
+
