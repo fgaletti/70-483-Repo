@@ -1,0 +1,48 @@
+﻿Enum:
+
+   enum AlineStateNormal
+        {
+            Sleeping,
+            Attacking,
+            Destroyed
+        }
+        enum AlienState :
+            byte
+        {
+            Sleeping =1,
+            Attacking =2,
+            Destroyed = 4
+        };
+
+-----
+
+GENERIC CONSTRIANS
+
+Class MyStack<T> where T:class
+
+ where T:class
+  where T:struct
+   where T:new()
+  where T:<base class>
+   where T:<interface name> -> specify multiple interfaces
+  where T: unmanaged -> must not be a reference type or contain any members that are reference types
+
+
+  --
+  METHOD
+	-member of a class
+
+CLASS
+	-template requiered to create an instance
+
+
+--OVERRIDEN 
+  --Takes place when class hierarchies are used. 
+    
+	  -> Method in a child clas : Contains same method with exactly same NAME
+							      SAME SIGNATURE as method in PARENT CLASS
+
+STRONGLY TYPE 
+
+   -If a class does not contain a Method -> C# refuse to call this method
+
