@@ -1,6 +1,13 @@
 using System;
+using System.CodeDom;
+using System.CodeDom.Compiler;
+using System.Collections;
 using System.Collections.Generic;
+using System.Dynamic;
+using System.IO;
 using System.Linq;
+using System.Linq.Expressions;
+using System.Reflection;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -30,6 +37,17 @@ namespace _70_483.ConsoleApp
             Console.WriteLine("3) Static Constructors  ");
             Console.WriteLine("4) Extensions  ");
             Console.WriteLine("5) Index property  ");
+            Console.WriteLine("6) Dynamic  ");
+            Console.WriteLine("7) ExpandoObject  ");
+            Console.WriteLine("8) Enumarator  "); // 154
+            Console.WriteLine("9) Enumerator  Class"); // 156
+            Console.WriteLine("10) Attributes"); // 162
+            Console.WriteLine("11) CodeDOM"); // 168
+            Console.WriteLine("12)  Lambda Expression Trees"); // 170
+            Console.WriteLine("13)  Use Func / Expression");// ****
+            Console.WriteLine("14)  Assembly");// 172
+            Console.WriteLine("15)  PropertyInfo");// 172
+            Console.WriteLine("16)  MethodInfo");// 174
 
             Console.WriteLine("99) EXIT");
             Console.Write("\r\nSelect an option: ");
@@ -55,7 +73,7 @@ namespace _70_483.ConsoleApp
                     Console.WriteLine("a: {0}", a.ToString());
 
                     Alien[] swarm = new Alien[100];
-                    Console.WriteLine("x {0}" , swarm[0].ToString());
+                    Console.WriteLine("x {0}", swarm[0].ToString());
 
                     Console.WriteLine("finishing processing");
                     Console.ReadKey();
@@ -65,7 +83,7 @@ namespace _70_483.ConsoleApp
 
                     //static alien class
                     // it is called ONCE before the creation of the firts instance of the class
-                    AlienClass alien = new AlienClass(); 
+                    AlienClass alien = new AlienClass();
                     AlienClass alien2 = new AlienClass(); //should not print 
 
                     Console.WriteLine("finishing static");
@@ -104,13 +122,307 @@ namespace _70_483.ConsoleApp
                     Console.WriteLine("finishing extensions");
                     Console.ReadKey();
                     return true;
+                case "6":
+                    // Dynamic
+
+                    dynamic d = new MessageDisplay();
+                    d.DisplayMessage("hello");
+
+                    dynamic m = new MessageDisplay();
+                    m.banana("hello");
+
+                    Console.WriteLine("finishing extensions");
+                    Console.ReadKey();
+                    return true;
+
+                case "7":
+                    // ExpandObject
+
+                    dynamic person = new ExpandoObject(); // system.Dynamic
+                    person.Name = "Ron";
+                    person.Age = 21;
+
+                    Console.WriteLine("Name: {0}", person.Name);
+
+                    Console.WriteLine("finishing extensions");
+                    Console.ReadKey();
+                    return true;
+
+                case "8":
+                    // Enumerator
+
+                    var stringEnumerator = "Hello World".GetEnumerator();
+                    
+                    while(stringEnumerator.MoveNext())
+                    {
+                        Console.WriteLine(stringEnumerator.Current );
+                    }
+                  
+                    Console.WriteLine("finishing extensions");
+                    Console.ReadKey();
+                    return true;
+
+                case "9":
+                    // Enumerator Class
+
+                   
+                    //IMPLEMENT ENUMERATOR
+
+                    EnumeratorThing ething = new EnumeratorThing(10);
+
+                    foreach (int i in ething)
+                        Console.WriteLine(i);
+
+                    Console.WriteLine("finishing extensions");
+                    Console.ReadKey();
+                    return true;
+
+                case "10":
+                    // Attributes
+
+                    Attribute atr = Attribute.GetCustomAttribute(typeof(Person),
+                        typeof(ProgrammerAttribute));
+
+                    ProgrammerAttribute p = (ProgrammerAttribute)atr;
+                    Console.WriteLine("Programmer: {0}" ,p.Programmer);
+
+                    //var Attrs = Attribute.GetCustomAttributes(typeof(Person), typeof(ProgrammerAttribute));
+                    var Attrs = Attribute.GetCustomAttributes(typeof(Person));
+
+                    foreach (var item in Attrs)
+                    {
+                        ProgrammerAttribute pItem = (ProgrammerAttribute)item;
+                        if (item is ProgrammerAttribute)
+                        Console.WriteLine("PROGRAMMER: {0}",pItem.Programmer);
+                    }
+
+                    for (int i = 0; i < Attrs.Length; i++)
+                    {
+                        Console.WriteLine(Attrs[i].ToString());
+                    }
+
+                    Type myType = typeof(Person);
+                    // Get the members associated with Person.
+                    MemberInfo[] myMembers = myType.GetMembers();
+
+                   /// Display the attributes for each of the members of Person.
+                    for (int i = 0; i < myMembers.Length; i++)
+                        {
+                            object[] myAttributes = myMembers[i].GetCustomAttributes(true);
+                            if (myAttributes.Length > 0)
+                            {
+                                Console.WriteLine("\nThe attributes for the member {0} are: \n", myMembers[i]);
+                                for (int j = 0; j < myAttributes.Length; j++)
+                                    Console.WriteLine("The type of the attribute is {0}.", myAttributes[j]);
+                            }
+                        }
+
+
+                    Console.WriteLine("finishing extensions");
+                    Console.ReadKey();
+                    return true;
+
+                case "11":
+                    // codeDOM
+
+                    //using CodeDom ;
+                    CodeCompileUnit compilerUnit = new CodeCompileUnit();
+
+                    //create a nameSpace to hold the Types we are going to create
+                    CodeNamespace personnelNameSpace = new CodeNamespace("Personnel");
+                    //import the namespace
+                    personnelNameSpace.Imports.Add(new CodeNamespaceImport("System"));
+
+                    //create a class
+                    CodeTypeDeclaration personClass = new CodeTypeDeclaration("Person");
+                    personClass.IsClass = true;
+                    personClass.TypeAttributes = TypeAttributes.Public; //system.reflection
+
+                    //Add personClass to NameSpace
+                    personnelNameSpace.Types.Add(personClass);
+
+                    //create a field to hold the name of the Person
+                    CodeMemberField nameField = new CodeMemberField("String", "name");
+                    nameField.Attributes = MemberAttributes.Private;
+
+                    // add the name field to thr Person Class
+                    personClass.Members.Add(nameField);
+
+                    //add the nameSpace to the Document
+                    compilerUnit.Namespaces.Add(personnelNameSpace);
+
+                    // * Once the CodeDOM object has been created you can create a 
+                    //   CodeDOMProvider to Parse the Code Document and produce the program code
+                    // example: ->it sends the program code to string 
+
+                    // send the document somewhere
+                    // using Sytem.CodeDOM.Compiler 
+                    CodeDomProvider provider =  CodeDomProvider.CreateProvider("CSharp"); //** 
+
+                    //give the provider somewhere to send the parsed output
+                    //Using System.IO
+                    StringWriter s = new StringWriter();
+
+                    // set the options to parse - we can use the default
+                    CodeGeneratorOptions options = new CodeGeneratorOptions();
+
+                    //generate the C# Source from the CodeDOM
+                    provider.GenerateCodeFromCompileUnit(compilerUnit, s, options);
+                    s.Close();
+
+                    //Print the C# OUTPUT
+                    Console.WriteLine(s.ToString());
+
+                    Console.WriteLine("finishing codeDOM");
+                    Console.ReadKey();
+                    return true;
+
+                case "12":
+                    // Lambda Expression Trees
+
+                    // System.Linq.Expression
+
+                    //parameter for a expression is an integer
+                    ParameterExpression numParam = Expression.Parameter(typeof(int), "num");
+
+                    //the operation to be performed is to square  the parameter
+                    BinaryExpression squareOperation = Expression.Multiply(numParam, numParam);
+
+                    //this creates an expression tree that describes the queare operation
+                    Expression<Func<int, int>> square = Expression.Lambda<Func<int, int>>(
+                                                       squareOperation,
+                                                       new ParameterExpression[]
+                                                       { numParam});
+
+                    //compile the tree to make an executable method and assign it to a delegate
+                    Func<int, int> doSquare = square.Compile();
+
+                    // call the delegate
+                    Console.WriteLine("Square of: {0}", doSquare(4));
+
+                    Console.WriteLine("Finishingv Lambda Expression Trees");
+                    Console.ReadKey();
+                    return true;
+
+                case "13":
+                    //use of FUNC
+
+                    bool isTeen =  isTeenAger(new Student() { Age = 34, StudentName = "SASASA", StudentID=1 });
+
+                    Console.WriteLine("IsTeen: {0}",isTeen);
+
+                    Console.WriteLine("finishing extensions");
+                    Console.ReadKey();
+                    return true;
+
+                case "14":
+                    //Assembly
+                    Assembly assembly = Assembly.GetExecutingAssembly();
+
+                    Console.WriteLine("FullName: {0}",assembly.FullName);
+
+                    AssemblyName name = assembly.GetName();
+                    Console.WriteLine("Mayor versioon {0}", name.Version.Major);
+                    Console.WriteLine("Minor versioon {0}", name.Version.Minor);
+
+                    Console.WriteLine("In Global : {0}", assembly.GlobalAssemblyCache);
+
+                    foreach (Type moduleType in assembly.GetTypes())
+                    {
+                        Console.WriteLine("Type: {0}", moduleType.Name );
+
+                        //foreach (MemberInfo member in moduleType.GetMembers())
+                        //{
+                        //    Console.WriteLine("Member: {0}", member);
+                        //}
+
+                    }
+
+
+                    Console.WriteLine("finishing extensions");
+                    Console.ReadKey();
+                    return true;
+
+                case "15":
+                    //PropertyInfo
+
+                    Type type = typeof(Student);
+
+                    foreach (PropertyInfo property in type.GetProperties())
+                    {
+                        Console.WriteLine("PropName: {0}", property.Name);
+                        if (property.CanRead)
+                        {
+                            Console.WriteLine("GET methos: {0}", property.GetMethod);
+                        }
+                        if (property.CanWrite)
+                        {
+                            Console.WriteLine("SET method: {0}", property.SetMethod);
+                        }
+                    }
+
+                    Console.WriteLine("finishing extensions");
+                    Console.ReadKey();
+                    return true;
+
+              
+
+                case "16":
+                    //methodInfo
+
+                    Type type16 = typeof(Calculator);
+
+                    //get method info
+                    MethodInfo addintInfo = type16.GetMethod("AddInt");
+
+                    //get the IL instrucctgion for the AddInt Method
+                    MethodBody addIntBody = addintInfo.GetMethodBody();
+
+                    //print the IL instructions
+                    foreach (byte b in addIntBody.GetILAsByteArray())
+                    {
+                        Console.WriteLine(" {0:X}",b);
+                    }
+
+                    Console.WriteLine();
+
+                    Console.WriteLine("Create Calculator");
+                    Calculator calc = new Calculator();
+                    // parameter array
+                    object[] inputs = new object[] { 1, 2 };
+
+                    Console.WriteLine("Calls invoke on the methoid info");
+                    int result = (int)addintInfo.Invoke(calc, inputs); // cast
+                    Console.WriteLine("RESULT : {0}", result    );
+
+                    //ConcatTypes
+                    object[] inputsString = new object[] { "texto", 77 };
+                    MethodInfo concatInfo = type16.GetMethod("ConcatTypes");
+                    string resultString = (string)concatInfo.Invoke(calc, inputsString); // cast
+                    Console.WriteLine("RESULT ConcatTypes: {0}", resultString);
+
+                    Console.WriteLine("finishing extensions");
+                    Console.ReadKey();
+                    return true;
                 case "99":
                     Environment.Exit(0);
                     return true;
                 default:
                     return true;
             }
+
         }
+
+        // fUNC
+        static Expression<Func<Student, bool>> isTeenAgerExpr = s => s.Age > 12 && s.Age < 20;
+       //static  Func<Student, bool> isTeenAger = isTeenAgerExpr.Compile();
+       static Func<Student, bool> isTeenAger = s => s.Age > 12 && s.Age < 20;
+
+        Func<Student, bool> isOld = s => s.Age > 40;
+
+        Func<string, bool> largename = n => n.Length > 5;
+        //Eend func
+
 
         enum AlineStateNormal
         {
@@ -121,8 +433,8 @@ namespace _70_483.ConsoleApp
         enum AlienState :
             byte
         {
-            Sleeping =1,
-            Attacking =2,
+            Sleeping = 1,
+            Attacking = 2,
             Destroyed = 4
         };
     }
@@ -133,7 +445,7 @@ namespace _70_483.ConsoleApp
         public int Y;
         public int Lives;
 
-        public Alien(int x , int y)
+        public Alien(int x, int y)
         {
             X = x;
             Y = y;
@@ -160,7 +472,7 @@ namespace _70_483.ConsoleApp
     {
         public static int LineCount(this String str)
         {
-            return str.Split(new char[] { '\n' }, StringSplitOptions.RemoveEmptyEntries).Length; 
+            return str.Split(new char[] { '\n' }, StringSplitOptions.RemoveEmptyEntries).Length;
         }
 
         public static string ToString2(this int integer)
@@ -204,8 +516,116 @@ namespace _70_483.ConsoleApp
                         break;
                     default:
                         break;
-                } ;
+                };
             }
         }
     }
+
+    // dynamic
+    class MessageDisplay
+    {
+        public void DisplayMessage(string message)
+        {
+            Console.WriteLine(message);
+        }
+    }
+
+    // MAKE OBJECT ENUMERABLE
+
+    class EnumeratorThing : IEnumerator<int> , IEnumerable
+    {
+        int count;
+        int limit;
+
+        public int Current
+        {
+            get
+            {
+                return count;
+            }
+        }
+
+        object IEnumerator.Current
+        {
+            get
+            {
+                return count;
+            }
+        }
+
+        public void Dispose()
+        {
+
+        }
+
+        public bool MoveNext()
+        {
+            if (++count == limit)
+                return false;
+            else
+                return true;
+        }
+
+        public void Reset()
+        {
+            count = 0;
+        }
+
+        public IEnumerator GetEnumerator() //IEnumerable implements
+        {
+            return this;
+        }
+
+        public EnumeratorThing (int limit)
+        {
+            count = 0;
+            this.limit = limit;
+        }
+    }
+
+    // Attributes
+    [AttributeUsage(AttributeTargets.Class)] //Controlling Attributes
+    class ProgrammerAttribute: Attribute
+    {
+        private string programmerVale;
+
+        public ProgrammerAttribute(string programmer)
+        {
+            programmerVale = programmer;
+        }
+        public string Programmer
+        { get { return programmerVale; } }
+
+    }
+     [ProgrammerAttribute(programmer:"Fred")]
+    class Person
+    {
+        public string Name { get; set; }
+    }
+
+    // Expression 
+
+    public class Student
+    {
+        public int StudentID { get; set; }
+        public string StudentName { get; set; }
+        public int Age { get; set; }
+
+    }
+
+    //METHODINFO
+    
+    public class Calculator
+    {
+        public int AddInt(int v1, int v2)
+        {
+            return v1 + v2;
+        }
+
+        public string ConcatTypes(string str1, int intToConvert)
+        {
+            return str1 + intToConvert.ToString();
+        }
+    }
+
 }

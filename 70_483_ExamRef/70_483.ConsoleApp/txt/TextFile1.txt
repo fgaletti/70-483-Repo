@@ -46,3 +46,254 @@ STRONGLY TYPE
 
    -If a class does not contain a Method -> C# refuse to call this method
 
+
+DYNAMIC
+ 
+   -Embeding Type Information from Assamblies
+
+   Property : Ember Interop Types = True
+
+
+ENFORCE ENCAPSULATION
+
+ -improve the Safety of the PROGRAM
+
+  -Exceptions : pasive program safety
+
+  -encapsulation: active program safety
+    ->
+      hide the elements that implement the behaviors of an object
+ 
+     -> protect against accidental damage , where a programmer
+		cnahges an internal element of an object without having a proper undestanding 
+		of the effect of the change
+
+
+	ENFORCE ENCAPSULATION
+		-> Properties
+	    - accessors -> public, private , protected , internal
+         -> USING EXplicit Interface Implementation
+
+   ENCAPSULATION
+	 -> Properties
+
+		-> Class Customer
+		  {
+			  public string name;
+		  }
+
+			*the name of the customer can be set to any string -NULL
+ 
+        --ok:
+          private string _nameValue;
+
+		  public string Name
+		  {
+			   get
+			   {
+			      return _nameValue;
+			   }
+			   set 
+			   {
+			     if (value == "")
+					 throw new Exception("Invalid name");
+			     _nameValue = value;
+			   }
+		  }
+
+		*PROPERTIES
+			-> Provides a powerful way ro enforce encapsulation
+
+		ReadOnly -> only set get (not set)
+
+	ENCAPSULATION BY ACCESOR
+		
+		-DEFAULT: private
+
+	  PROTECTED CLASS
+		-Usable in any class that EXTEND the PARENT(Base) class in which the memeber was declared
+
+		*not recomendable in HIGHLY IMPORTANT DATA MEMBERS of a class such as BANK BALANCE.
+           ->very easy to a programmer to extend the parent class
+
+	 INTERNAL ACCESS
+
+		-> ACCESIBLE WITHIN the ASSAMBLY in which is declared
+
+		  *USEFUL -> you have a  large number of cooperating classes that are being used
+		  to provide a particular library component.
+
+	READONLY ACCESS
+			
+		-> The value of the Member can only bet set at the declaration or within the constructor	
+		   of the Class
+
+--ENUMERATOR
+
+   -forEah : automacally gets Enumerator
+
+
+   Ienumerable : contains enumerator:
+     -is the base interface for all non-generic collections that can be enumerated.
+	  IEnumerable is to make the syntax shorter and simpler.
+
+  ENUMERATROR:
+    - Supports a simple iteration over a non-generic collection.
+	-IEnumerator retains its cursor's current state.
+
+
+---
+  DISPOSE 
+    -Release unmanaged Resources
+
+----------------
+CODEDOM  //168 
+
+ //using CodeDom ;
+                    CodeCompileUnit compilerUnit = new CodeCompileUnit();
+
+                    //create a nameSpace to hold the Types we are going to create
+                    CodeNamespace personnelNameSpace = new CodeNamespace("Personnel");
+                    //import the namespace
+                    personnelNameSpace.Imports.Add(new CodeNamespaceImport("System"));
+
+                    //create a class
+                    CodeTypeDeclaration personClass = new CodeTypeDeclaration("Person");
+                    personClass.IsClass = true;
+                    personClass.TypeAttributes = TypeAttributes.Public; //system.reflection
+
+                    //Add personClass to NameSpace
+                    personnelNameSpace.Types.Add(personClass);
+
+                    //create a field to hold the name of the Person
+                    CodeMemberField nameField = new CodeMemberField("String", "name");
+                    nameField.Attributes = MemberAttributes.Private;
+
+                    // add the name field to thr Person Class
+                    personClass.Members.Add(nameField);
+
+                    //add the nameSpace to the Document
+                    compilerUnit.Namespaces.Add(personnelNameSpace);
+
+                    // * Once the CodeDOM object has been created you can create a 
+                    //   CodeDOMProvider to Parse the Code Document and produce the program code
+                    // example: ->it sends the program code to string 
+
+                    // send the document somewhere
+                    // using Sytem.CodeDOM.Compiler 
+                    CodeDomProvider provider =  CodeDomProvider.CreateProvider("CSharp"); //** 
+
+                    //give the provider somewhere to send the parsed output
+                    //Using System.IO
+                    StringWriter s = new StringWriter();
+
+                    // set the options to parse - we can use the default
+                    CodeGeneratorOptions options = new CodeGeneratorOptions();
+
+                    //generate the C# Source from the CodeDOM
+                    provider.GenerateCodeFromCompileUnit(compilerUnit, s, options);
+                    s.Close();
+
+
+// SYSTEM.REFLECTION   // 172
+
+ASSAMBLY 
+	-> is the output produced when a .NET project is compiled
+
+  -Assambly Type: 
+	   -> represent the Contents of an Assambly
+
+ -Assambly Class:
+	  -> provides a way that programs can use reflection on the content
+	     -> any dependencies that the assambly has on other files
+
+		   Assembly assembly = Assembly.GetExecutingAssembly();
+
+           Console.WriteLine("FullName: {0}",assembly.FullName);
+
+           AssemblyName name = assembly.GetName();
+            Console.WriteLine("Mayor versioon {0}", name.Version.Major);
+
+			Type moduleType in assembly.GetTypes()  -> get classes/iterfaces
+
+
+ --PROPERTYINFO
+
+  Type type = typeof(Student);
+
+        foreach (PropertyInfo property in type.GetProperties())
+        {
+            Console.WriteLine("PropName: {0}", property.Name);
+            if (property.CanRead)
+            {
+                Console.WriteLine("GET methos: {0}", property.GetMethod);
+            }
+            if (property.CanWrite)
+            {
+                Console.WriteLine("SET method: {0}", property.SetMethod);
+            }
+        }
+
+
+ -METHODINFO
+       -> DATA about a Method in a Type
+	      ->Signature of the method
+		  ->Return Type of the method
+		  -> details of the methos parameters
+		  -> byte code that forms the body of the method
+
+		   Type type16 = typeof(Calculator);
+
+            //get method info
+            MethodInfo addintInfo = type16.GetMethod("AddInt");
+
+            //get the IL instrucctgion for the AddInt Method
+            MethodBody addIntBody = addintInfo.GetMethodBody();
+
+            //print the IL instructions
+            foreach (byte b in addIntBody.GetILAsByteArray())
+            {
+                Console.WriteLine(" {0:X}",b);
+            }
+
+            Console.WriteLine();
+
+            Console.WriteLine("Create Calculator");
+            Calculator calc = new Calculator();
+            // parameter array
+            object[] inputs = new object[] { 1, 2 };
+
+            Console.WriteLine("Calls invoke on the methoid info");
+            int result = (int)addintInfo.Invoke(calc, inputs); // cast
+            Console.WriteLine("RESULT : {0}", result    );
+
+**** // Typeof / is
+
+public class Animal { }
+
+public class Giraffe : Animal { }
+
+public static class TypeOfExample
+{
+    public static void Main()
+    {
+        object b = new Giraffe();
+        Console.WriteLine(b is Animal);  // output: True
+        Console.WriteLine(b.GetType() == typeof(Animal));  // output: False
+
+        Console.WriteLine(b is Giraffe);  // output: True
+        Console.WriteLine(b.GetType() == typeof(Giraffe));  // output: True
+    }
+}
+
+
+
+
+**MEMBERS:
+
+   Fields, Constants, Properties, 
+   Methods ,  Events, Operators, Indexers
+    Constructors, Finalizers, Nested Types
+
+
+
