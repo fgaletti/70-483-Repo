@@ -4,6 +4,7 @@ using System.CodeDom.Compiler;
 using System.Collections;
 using System.Collections.Generic;
 using System.Dynamic;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Linq.Expressions;
@@ -48,6 +49,12 @@ namespace _70_483.ConsoleApp
             Console.WriteLine("14)  Assembly");// 172
             Console.WriteLine("15)  PropertyInfo");// 172
             Console.WriteLine("16)  MethodInfo");// 174
+
+            Console.WriteLine("17)  GCollector");// 182
+            Console.WriteLine("18)  StringWriter");// 185
+            Console.WriteLine("19)  Formatting");// 191
+            Console.WriteLine("20)  FormatProvider");// 192
+            Console.WriteLine("21)  Interpolation");// 192
 
             Console.WriteLine("99) EXIT");
             Console.Write("\r\nSelect an option: ");
@@ -404,6 +411,78 @@ namespace _70_483.ConsoleApp
                     Console.WriteLine("finishing extensions");
                     Console.ReadKey();
                     return true;
+
+                case "17":
+                    //DISPOSE / FINALIZER
+
+                    ResourceHolder r = new ResourceHolder();
+
+                    r.Dispose();
+
+                    Console.WriteLine("finishing GC");
+                    Console.ReadKey();
+                    return true;
+
+                case "18":
+                    //StringWriter
+
+                    StringWriter sw = new StringWriter();
+                    sw.WriteLine("Hello sw");
+                    sw.Close();
+
+                    //Console.WriteLine(sw.ToString());
+
+                    Console.WriteLine("finishing StringWriter");
+                    Console.ReadKey();
+                    return true;
+                case "19":
+                    //Formatt
+
+                   MusicTrack song = new MusicTrack(artist: "Rob",title:"My Way");
+
+                    Console.WriteLine("Track {0:F}", song);
+                    Console.WriteLine("Track {0:A}", song);
+                    Console.WriteLine("Track {0:T}", song);
+
+                    Console.WriteLine("finishing Format");
+                    Console.ReadKey();
+                    return true;
+
+                case "20":
+                    //Formatt Provider
+                    double bankBalance = 123.45;
+
+                    //using SYtem globaliaztion
+                    CultureInfo usProvider = new CultureInfo("en-US");
+                    Console.WriteLine("Us Balance {0}",bankBalance.ToString("C", usProvider));
+
+                    CultureInfo ukProvider = new CultureInfo("en-GB");
+                    Console.WriteLine("UK Balance {0}", bankBalance.ToString("C", ukProvider));
+
+                    Console.WriteLine("finishing formatprovider");
+                    Console.ReadKey();
+                    return true;
+
+                case "21":
+                    //Interpolation
+
+                    string name21 = "Ron";
+                    int age = 21;
+
+                    Console.WriteLine("YourName is {0} and your age is {1,-5:D}", name21, age);
+
+                    Console.WriteLine($"YourName is {name21} and your age is {age, -5:D}");
+                    Console.WriteLine($"YourName is {name21} and your age is {age}");
+
+                    double bankBalance21 = 124.54;
+                    //FormattableString balanceMessage = $"US balance: {bankBalance21:C}";
+                    string balanceMessage = $"US balance: {bankBalance21:C}";
+                    CultureInfo usProvider21 = new CultureInfo("en-US");
+                    Console.WriteLine(balanceMessage.ToString(usProvider21));
+
+                    Console.WriteLine("finishing Interpolation");
+                    Console.ReadKey();
+                    return true;
                 case "99":
                     Environment.Exit(0);
                     return true;
@@ -625,6 +704,77 @@ namespace _70_483.ConsoleApp
         public string ConcatTypes(string str1, int intToConvert)
         {
             return str1 + intToConvert.ToString();
+        }
+    }
+
+    // IDISPOSABLE  -- 182
+
+    class ResourceHolder: IDisposable
+    {
+        bool disposed = false;
+
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this); // Not to be called for GC because it has been disposed
+        }
+
+        public void Dispose (bool disposing)
+        {
+            if (disposed)
+                return;
+
+            if (disposing)
+            {
+                //free any managed object
+            }
+
+            // Free any UNMANAGED Object
+        }
+
+        ~ResourceHolder()
+        {
+            // dispose only of UNMANAGED OBJECTS
+            Dispose(false);
+        }
+    }
+
+    // FORMATER
+
+    class MusicTrack: IFormattable
+    {
+        public string Artist { get; set; }
+        public string Title { get; set; }
+
+        //tostring that implelmets the formatting behavior
+        public string ToString(string format, IFormatProvider formatProvider)
+        {
+            if (string.IsNullOrWhiteSpace(format))
+                format = "G";
+
+            switch (format)
+            {
+                case "A": return Artist;
+                case "T": return Title;
+                case "G": // DEFAULT 
+                case "F": return Artist + " " +  Title;
+                    
+                default:
+                    throw new FormatException("Format specifier was invalid");
+            }
+
+        }
+
+        //string that overrides the behavior in the base class
+        public override string ToString()
+        {
+            return Artist + " " + Title;
+        }
+
+        public MusicTrack(string artist, string title)
+        {
+            Artist = artist;
+            Title = title;
         }
     }
 

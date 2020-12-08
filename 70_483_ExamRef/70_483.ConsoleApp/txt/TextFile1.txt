@@ -295,5 +295,98 @@ public static class TypeOfExample
    Methods ,  Events, Operators, Indexers
     Constructors, Finalizers, Nested Types
 
+----
+ GARBAGE COLLECTOR
 
+  1. phase: mark all object that are in Use
+  2. remove all object that do not have that mark
+  3 Compactation of the Heap : 
+
+  *All managed threads are ssuspended while the garbage collector is running.
+
+  -> Determine which object ARE LONG LIVED /SHORT LIVED (ephemeral)
+
+  --GC -> Can run in "Workstation" or "Server" modes, depending on the role of the system.
+
+  --also an option  to run GC Concurrently on a separate Thread -> increase memory
+
+  
+  GC.Collect(); -> force a garbage collector
+
+  FINALIZER
+
+   -> ~Person()
+
+      -> no garantee that is called 
+
+ GC.SuppressFinalize(this); -> prevents finalizarion from Being Called on the project
+
+ GC.ReRegisterForFinalize(p) -> re-enable finalization 
+
+
+ --- STRING INTERNING
+  
+     -> When a program is compiled the compiler uses a process called 
+	    string interning to IMPROVE EFFICIENTY of STRING STORAGE.
+
+		- 2 strings REFER to the same string object with the content "hello"
+
+	 string s1 = "hello"
+	 string s2 = "hello"
+
+	 -force 
+	  s3 = string.Intern(s3);
+
+
+
+  MANIPULATE STRINGS
+
+   -StringBuilder 
+
+   -StringWriter: based on Stringbuilder class 
+			     -implements TextWriter
+
+   -StringReaded: 
+
+   SEARCH STRINGS
+
+   -Contains -> input.Contains("Rob") / true/false
+
+   - TrimStart -> input.TrimStart();
+
+   -StartsWith("Rob") -> t/f
+
+   -Replace -> 
+
+   Split -> returns Array of strings -> it is given one or more SEPARATOR
+
+      -> string senctenc =" the cat sat"
+	    string[] words = sentence.Split(' ');
+
+		foreach(string word in words)
+			write (word)
+
+	STRING COMPARISON AND CULTURES
+
+	 Thread.CurrentThread.Culture =  CultureInfo.CreateSpecificCulture("en-US");
+
+	 if ("Enciclopaedia".Equals("Encyclopedia", StringComparison.CurrenCulture))
+	    -> Equals
+
+			ENCYCLOPEDIA ->  StringComparison.CurrenCultureIngoreCase -> Equals
+
+		ENCYCLOPEDIA ->  StringComparison.OrdinalIgnoreCase -> Not Equal
+
+
+	ENUMERATE STRINGS
+
+	 foreach (char ch in "Hello")
+
+
+	 STRING INTERPOLATION
+	 string name ="Ron";
+	 int age = 21;
+	 WtrileLine($"YourName is {name} and your age is {age}")
+
+	 - String Interpolation LITERAL -> produces -> FormattedString
 
