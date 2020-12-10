@@ -313,7 +313,7 @@ namespace _70_483.ConsoleApp
 
                 case "13":
                     //use of FUNC
-
+                     Func<Student, bool> isTeenAger = ss => ss.Age > 12 && ss.Age < 20;  //func can be place inside a switch, anywhere
                     bool isTeen =  isTeenAger(new Student() { Age = 34, StudentName = "SASASA", StudentID=1 });
 
                     Console.WriteLine("IsTeen: {0}",isTeen);
@@ -334,14 +334,14 @@ namespace _70_483.ConsoleApp
 
                     Console.WriteLine("In Global : {0}", assembly.GlobalAssemblyCache);
 
-                    foreach (Type moduleType in assembly.GetTypes())
+                    foreach (Type moduleType in assembly.GetTypes())   // return classes , structs
                     {
                         Console.WriteLine("Type: {0}", moduleType.Name );
 
-                        //foreach (MemberInfo member in moduleType.GetMembers())
-                        //{
-                        //    Console.WriteLine("Member: {0}", member);
-                        //}
+                        foreach (MemberInfo member in moduleType.GetMembers())
+                        {
+                            Console.WriteLine("Member: {0}", member);
+                        }
 
                     }
 
@@ -354,6 +354,14 @@ namespace _70_483.ConsoleApp
                     //PropertyInfo
 
                     Type type = typeof(Student);
+
+                    Type type2 = typeof(Student);
+
+                   
+                    foreach (PropertyInfo prop in type2.GetProperties())
+                    {
+
+                    }
 
                     foreach (PropertyInfo property in type.GetProperties())
                     {
@@ -495,7 +503,7 @@ namespace _70_483.ConsoleApp
         // fUNC
         static Expression<Func<Student, bool>> isTeenAgerExpr = s => s.Age > 12 && s.Age < 20;
        //static  Func<Student, bool> isTeenAger = isTeenAgerExpr.Compile();
-       static Func<Student, bool> isTeenAger = s => s.Age > 12 && s.Age < 20;
+      
 
         Func<Student, bool> isOld = s => s.Age > 40;
 
