@@ -1,0 +1,66 @@
+﻿
+
+Xml : extensible markup language
+
+using System.Xml.Serialization;
+
+--PARAMETLESS CONSTRUCTOR ***
+--ONLY Public object
+
+
+     XmlSerializer trackSerializer = new XmlSerializer(typeof(MusicTrack2));
+	   // create TextWriter
+      TextWriter serWriter = new StringWriter();
+                    // Serialize
+       trackSerializer.Serialize(textWriter: serWriter, o: track2);
+
+  -- Deserialize
+	 TextReader reader = new StringReader(trackXml);
+    MusicTrack2 trackReaderBack = trackSerializer.Deserialize(reader) as MusicTrack2;
+
+
+
+APPROPIATE COLLECTION
+
+  -Advisable Use Typed Version of the C# collections
+
+    -> ArrayList ->untyped 
+
+	     -> can hold referecnes to : Person, MusicTrack
+		    -> this can LEAD To Problems at RunTime.
+
+  -List -> generic 
+
+  -CORRECT KIND OF COLLECTION
+
+    -Processing incommign messages 
+		-> QUEUE  (fifo)  if you want
+		->STACK  (Lifo)
+
+
+   -- ARRAY -> IF YOUR APP is going to USE INDEX to access elements
+	 and you Know in ADVANCE How many Elements there Are. 
+		 
+		    -> Useful for lookup Tables
+
+	- LIST<T> -> If NUMBERS od items UNKNOWN
+   
+    -LINKEDLIST<T> -> FREQUENT INSERTIONS /DELETIONS of items, LARGE LIST of Items
+		  
+ 
+    -IF store Data in ORDER -> add COMPareTO Behavior to your Objects
+							-> Icomparable -> Sort in the LIST 
+
+	-DICTIONARY -> IF Want INDEX info on a KEY VALUE (banck account)
+		- DICTIONARY 
+		
+
+--- 
+ int.TryPars("99", out result)
+    OK
+
+VALIDATION ASP
+
+	-> ..
+		[Range(20, 600)]
+		public int length {get: set;}
