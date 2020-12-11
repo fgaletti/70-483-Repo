@@ -35,6 +35,11 @@ namespace _70_483.ConsoleApp
             Console.WriteLine("7) Data Validation End Numbers ");
             Console.WriteLine("8) Perfect Validation");
 
+            Console.WriteLine("9) Regex Basic");
+            Console.WriteLine("10) Regex Compile");
+            Console.WriteLine("11) Regex Options");
+            Console.WriteLine("12) Escapes");
+
             Console.WriteLine("99) EXIT");
             Console.Write("\r\nSelect an option: ");
            
@@ -212,6 +217,71 @@ namespace _70_483.ConsoleApp
                         Console.WriteLine("NOT Valid");
 
                     Console.WriteLine("finishing Perfect Validation");
+                    Console.ReadKey();
+                    return true;
+
+                case "9":
+                    //Regex basic
+
+                    Console.WriteLine(Regex.Match("color", @"colo8?h?-?r").Success);
+                    Console.WriteLine(Regex.Match("colour", @"colou?r").Success);
+                    Console.WriteLine(Regex.Match("colouur", @"colou?r").Success);
+
+                    Match m = Regex.Match("Any color you like", @"col");
+                    Console.WriteLine(m.Value);
+
+                    Match m2 = Regex.Match("Any color you like, there are two colors", @"col");
+                    Console.WriteLine(m2.Value);
+                    Match m3 = m2.NextMatch();
+                    Console.WriteLine(m3.Value);
+
+                    foreach (Match match in Regex.Matches("Any color you like, there are two colors", @"col"))
+                    {
+                        Console.WriteLine(match.Value);
+                    }
+
+                    // | alternator
+                    Console.WriteLine(Regex.IsMatch("Jenny", "Jen(ny|nifer)"));
+
+
+                    Console.WriteLine("finishing regex basic");
+                    Console.ReadKey();
+                    return true;
+
+                case "10":
+                    //Regex Compile
+
+                    Regex r = new Regex(@"sausaguex?", RegexOptions.Compiled);
+                    Console.WriteLine(r.Match("sausague"));
+                    Console.WriteLine(r.Match("sausagues").Value);
+
+                    Console.WriteLine("finishing regex Compile");
+                    Console.ReadKey();
+                    return true;
+                case "11":
+                    //Regex Options
+                    Console.WriteLine(Regex.Match("a", "A", RegexOptions.IgnoreCase));
+                    Console.WriteLine(Regex.Match("AAAa", "(?i)a(?-i)a", RegexOptions.IgnoreCase));
+                    Console.WriteLine(Regex.Match("AAAa", "(?i)Aaa", RegexOptions.IgnoreCase));
+
+                    // ??
+                    Console.WriteLine(Regex.Match("AAAa", "(?-i)aaa", RegexOptions.IgnoreCase)); // ??
+
+
+                    Console.WriteLine("finishing regex optrions");
+                    Console.ReadKey();
+                    return true;
+
+                case "12":
+                    //Escapes
+                    //metacharactes
+                    //  \*+?|{[()^$.#
+
+                    // prefix with a backslash
+                    Console.WriteLine(Regex.Match("what?", @"what\?")); // correct returns what?
+                    Console.WriteLine(Regex.Match("what?", @"what?"));  //return what -> incorrect , ? is missing
+
+                    Console.WriteLine("finishing regex Compile");
                     Console.ReadKey();
                     return true;
                 case "99":
