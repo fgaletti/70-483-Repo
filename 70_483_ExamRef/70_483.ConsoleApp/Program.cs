@@ -39,6 +39,9 @@ namespace _70_483.ConsoleApp
             Console.WriteLine("10) Regex Compile");
             Console.WriteLine("11) Regex Options");
             Console.WriteLine("12) Escapes");
+            Console.WriteLine("13) Character Set");
+            Console.WriteLine("14) Quantifiers");
+
 
             Console.WriteLine("99) EXIT");
             Console.Write("\r\nSelect an option: ");
@@ -280,6 +283,40 @@ namespace _70_483.ConsoleApp
                     // prefix with a backslash
                     Console.WriteLine(Regex.Match("what?", @"what\?")); // correct returns what?
                     Console.WriteLine(Regex.Match("what?", @"what?"));  //return what -> incorrect , ? is missing
+
+                    Console.WriteLine("finishing regex Compile");
+                    Console.ReadKey();
+                    return true;
+
+                case "13":
+                    //Character Set
+
+                    Console.WriteLine(Regex.Matches("That is that.", "[Tt]hat").Count);
+                    Console.WriteLine(Regex.Match("That is that.", "[Th]at"));
+
+                    Console.WriteLine(Regex.Match("ftyuiz qperty lm", @"f[^aeiou]"));
+                    Console.WriteLine(Regex.Match("b1-c4", @"[a-h]\d-[a-h]\d"));
+
+                    Console.WriteLine("finishing regex Compile");
+                    Console.ReadKey();
+                    return true;
+
+                case "14":
+                    //Quantifiers
+
+                    Console.WriteLine(Regex.Match("cv15.doc", @"cv\d*\.doc"));
+                    Console.WriteLine(Regex.Match("cv15t.doc", @"cv\d*t"));
+
+                    //anything beetween cv and .doc
+                    Console.WriteLine(Regex.Match("cvjoint.doc", @"cv.*\.doc"));
+                    Console.WriteLine(Regex.Match("cvjoint.doc", @"cv.*.doc"));
+                    Console.WriteLine(Regex.Match("cvjoint99ydoc", @"cv.*ydoc"));
+
+                    Console.WriteLine(Regex.Match("cvjoint99ydoc", @"cv.*pc"));
+
+                    //quantitie matchs one or more times
+
+                    Console.WriteLine(Regex.Matches("slow  yeah slooow", @"slo+w").Count);
 
                     Console.WriteLine("finishing regex Compile");
                     Console.ReadKey();

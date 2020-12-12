@@ -64,3 +64,32 @@ VALIDATION ASP
 	-> ..
 		[Range(20, 600)]
 		public int length {get: set;}
+
+
+-------------------------
+
+REGEX
+
+\d  = any digit
+
+\w   = a-z AZ 0-0
+
+\s =  white caracter , space
+    -> same as \r\n\t\f
+
+p{category}   = matches a specific category
+
+. = any character except \n
+
+QUANTIFIERS
+
+*   = zero or more characters
++   = one or m ore matches
+?   = zero or one match
+{n} =exactly N matcher
+{n, }  = at least N matches
+{n,m } = beetween N and M
+
+
+
+
