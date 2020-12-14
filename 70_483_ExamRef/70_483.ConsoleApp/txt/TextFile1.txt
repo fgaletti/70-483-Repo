@@ -1,0 +1,15 @@
+﻿
+GENERATE KEYS
+
+sn.exe -k mykeypair.snk 
+
+--SING 
+
+csc.exe /keyfile:mykeypair.snk Program.cs
+                 mykeypair.snk
+
+
+key_stongname -> pancho77
+
+//delay signing
+sn -p mykeypair.snk publickeyonly.pk
