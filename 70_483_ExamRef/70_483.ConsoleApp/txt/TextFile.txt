@@ -1,0 +1,43 @@
+﻿
+
+AES Ecnryption
+
+
+RSA ASYMETRIC ENCRYPTION 
+
+   -> create Public/private keys
+
+   * River-Shamir-Adleman 
+
+   RSACryptoServiceProvider
+
+
+    // User level key store 
+
+	 -> CspParameters csp = new CspParameters();
+                    csp.KeyContainerName = containerName;
+
+                    //create new RSA to encrypt the data
+                    // passes the parameter CSP 
+                    RSACryptoServiceProvider rsaStore = new RSACryptoServiceProvider(csp);
+
+
+DATA INTEGRITY BY HASHING DATA
+
+ calculateCheckSum -> Does take into account the order of characters in a string.
+                   -> Hello world = world Hello
+
+
+SHA1 -> 20 bytes -> 160 bit has code value
+
+
+SHA2
+   -> improves in SHA1 -> FAMILY of 6 has functions 
+						  -> can produce outputs that are
+							224, 226, 384 / 512 
+
+
+
+DOUBLE ENCRYPTING 
+   - Add another layer CryptoStream
+
