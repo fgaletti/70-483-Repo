@@ -33,6 +33,11 @@ namespace _70_483.ConsoleApp
 
                     Assembly a = typeof(Program).Assembly;
                     Console.WriteLine(a.FullName);
+                    AssemblyName name = a.GetName();
+                    Console.WriteLine(name.Version.Major);
+                    Console.WriteLine(name.Version.MajorRevision);
+                    Console.WriteLine(name.Version.Minor);
+                    Console.WriteLine(name.Version.MinorRevision);
 
                     Console.WriteLine("finishing processing");
                     Console.ReadKey();

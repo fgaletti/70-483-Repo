@@ -11,5 +11,45 @@ csc.exe /keyfile:mykeypair.snk Program.cs
 
 key_stongname -> pancho77
 
-//delay signing
-sn -p mykeypair.snk publickeyonly.pk
+//DELAY signing
+  -restrict the access to the ky pairs
+
+    -> FILE ONLY WITH PUBLIC KEY
+  
+sn -p mykeypair.snk publickeyonly.pk  -> generate public key
+
+ OBTAIN PUBLIC KEY FORM EXISTING ASSEMBLI
+sn -e Program.exe publickeyonly.pk  -> obtain
+
+AUTHENTICODE
+
+GLOBAL ASSEMBLY CACHE
+
+ -> Contains a centralizae coy of the .Net Framework
+ -> you can put your assemblies 
+
+
+ GAC -> Version at machine level
+
+   -> gacutil /i myassembly.dll
+
+      -> First step is to give a strong name
+
+  UPDATE : same name/version
+    -> -> gacutil /i myassembly.dll
+	 
+
+ *CHanging ASSEMBLY'S VERSION -> gives a Brand-new Identity
+
+   SYDE-BY-SYDE -> prevents "Dll hell"
+    
+	-Writes Util assembly 1.0.0.0 -> install in the GAC 
+	-2 new features -> 1.0.0.1 
+    
+	    -> you can choose what version to reference when compiling
+		-> any application previosly compliled to reference Utils 1.0.0.0
+		   will continue to do SO.
+
+  PUBLISHER POLICY - ASSEMBLY BINDING REDIRECTION 
+
+    
