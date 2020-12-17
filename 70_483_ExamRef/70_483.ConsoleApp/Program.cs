@@ -55,6 +55,10 @@ namespace _70_483.ConsoleApp
             Console.WriteLine("20) Performance Counters   "); //292
             Console.WriteLine("21) Create Own Performance Counters   "); //293
 
+            Console.WriteLine("22) Write an event log   "); //295
+
+
+
             Console.WriteLine("99) EXIT");
             Console.Write("\r\nSelect an option: ");
            
@@ -361,7 +365,13 @@ namespace _70_483.ConsoleApp
                         Console.ReadKey();
                         return true;
                     }
-
+                    if (SetupPerformanceCounters() == CreationResult.CreatedCounters)
+                    {
+                        Console.WriteLine("Performance counters created");
+                        Console.WriteLine("Restart program");
+                        Console.ReadKey();
+                        return true;
+                    }
                     Console.WriteLine("Processing started");
 
                     //sequentialTest();
@@ -371,10 +381,9 @@ namespace _70_483.ConsoleApp
                         ImagesPerSecondCounter.Increment();
                     }
 
-                   
 
                     // parallelTest();
-                    for (int i = 0; i < 50; i++)
+                    for (int i = 0; i < 70; i++)
                     {
                         TotalImageCounter.Increment();
                         ImagesPerSecondCounter.Increment();
@@ -385,6 +394,30 @@ namespace _70_483.ConsoleApp
                     Console.WriteLine("finishing create own performance counter");
                     Console.ReadKey();
                     return true;
+
+               
+
+                case "22":
+                    // create event log
+
+                    if (SetupLogEvent() == CreationResultEvent.CreatedLog)
+                    {
+                        Console.WriteLine("Log Created");
+                        Console.WriteLine("Restart the program");
+                        return true;
+                    }
+
+                    Console.WriteLine("Processing started");
+                    imageEventLog.WriteEntry("Image processing started");
+
+                    //reagind
+
+                    imageEventLog.WriteEntry("Image processing Ending");
+
+                    Console.WriteLine("finishing create event log");
+                    Console.ReadKey();
+                    return true;
+
                 case "99":
                     Environment.Exit(0);
                     return true;
@@ -556,6 +589,34 @@ namespace _70_483.ConsoleApp
             MakeThumbnailsParallel(sourceDir: @"..\..\..\..\images",
                 destDir: @"..\..\..\..\images\Parallel");
         }
+
+
+        //Write to event Log
+        static EventLog imageEventLog;
+
+        enum CreationResultEvent
+        {
+            CreatedLog,
+            LoadedLog
+        }
+
+        static CreationResultEvent SetupLogEvent()
+        {
+            string categoryName = "Image Processing";
+
+            if(EventLog.SourceExists(categoryName))
+            {
+                imageEventLog = new EventLog();
+                imageEventLog.Source = categoryName;
+                return CreationResultEvent.LoadedLog;
+            }
+
+            EventLog.CreateEventSource(source: categoryName,
+                logName: categoryName + "log");
+
+            return CreationResultEvent.CreatedLog;
+        }
+
 
 
     }
