@@ -9,7 +9,8 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
-
+using System.Drawing;
+using System.IO;
 
 namespace _70_483.ConsoleApp
 {
@@ -49,6 +50,10 @@ namespace _70_483.ConsoleApp
             Console.WriteLine("17) SourceSwitch   "); //287
 
             Console.WriteLine("18) Tracing app.config   "); //287
+            Console.WriteLine("19) StopWatch   "); //287
+
+            Console.WriteLine("20) Performance Counters   "); //292
+            Console.WriteLine("21) Create Own Performance Counters   "); //293
 
             Console.WriteLine("99) EXIT");
             Console.Write("\r\nSelect an option: ");
@@ -299,6 +304,87 @@ namespace _70_483.ConsoleApp
                     Console.WriteLine("finishing delimited");
                     Console.ReadKey();
                     return true;
+                case "19":
+                    // stopwatch 
+
+                    Stopwatch stopWatch = new Stopwatch();
+                    stopWatch.Start();
+                    int j = 0;
+                    for (int i = 0; i < 5000000; i++)
+                    {
+                        j++;
+                    }
+                    stopWatch.Stop();
+                    Console.WriteLine("milliseconds 1 : {0}", stopWatch.ElapsedTicks);
+
+                    stopWatch.Restart();
+                    for (int i = 0; i < 10000000; i++)
+                    {
+                        j++;
+                    }
+                    stopWatch.Stop();
+                    Console.WriteLine("milliseconds2 : {0}", stopWatch.ElapsedTicks);
+
+                    Console.WriteLine("finishing delimited");
+                    Console.ReadKey();
+                    return true;
+
+                case "20":
+                    // performance counter 
+
+                    PerformanceCounter processor = new PerformanceCounter(
+                        categoryName: "Processor Information",
+                        counterName: "% Processor Time",
+                        instanceName: "_Total");
+
+                    Console.WriteLine("Press any key to stop");
+
+                    while(true)
+                    {
+                        Console.WriteLine("Processor time {0}", processor.NextValue());
+                        Thread.Sleep(500);
+                        if (Console.KeyAvailable)
+                            break;
+                    }
+
+                    Console.WriteLine("finishing performance counter");
+                    Console.ReadKey();
+                    return true;
+
+                case "21":
+                    // create own performance counter 
+
+                    if(SetupPerformanceCounters() == CreationResult.CreatedCounters)
+                    {
+                        Console.WriteLine("Performance counters created");
+                        Console.WriteLine("Restart program");
+                        Console.ReadKey();
+                        return true;
+                    }
+
+                    Console.WriteLine("Processing started");
+
+                    //sequentialTest();
+                    for (int i = 0; i < 100; i++)
+                    {
+                        TotalImageCounter.Increment();
+                        ImagesPerSecondCounter.Increment();
+                    }
+
+                   
+
+                    // parallelTest();
+                    for (int i = 0; i < 50; i++)
+                    {
+                        TotalImageCounter.Increment();
+                        ImagesPerSecondCounter.Increment();
+                    }
+
+                    Console.WriteLine("Processing complete. Press any key to exit.");
+
+                    Console.WriteLine("finishing create own performance counter");
+                    Console.ReadKey();
+                    return true;
                 case "99":
                     Environment.Exit(0);
                     return true;
@@ -358,5 +444,119 @@ namespace _70_483.ConsoleApp
         {
             Console.WriteLine("Inside ..");
         }
+
+
+        // Make Performance  counter
+        public static PerformanceCounter TotalImageCounter;
+        public static PerformanceCounter ImagesPerSecondCounter;
+
+        enum  CreationResult
+        {
+            CreatedCounters,
+            LoadedCounters
+        }
+
+        static CreationResult SetupPerformanceCounters()
+        {
+            string categoryName = "Image Processing";
+
+            if (PerformanceCounterCategory.Exists(categoryName) )
+            {
+                //production code should use using
+                TotalImageCounter = new PerformanceCounter(categoryName: categoryName,
+                    counterName: "# images processed", readOnly: false);
+
+                ImagesPerSecondCounter = new PerformanceCounter(categoryName: categoryName,
+                    counterName: "# images processed per second", readOnly: false);
+                return CreationResult.LoadedCounters;
+            }
+
+            CounterCreationData[] counters = new CounterCreationData[]
+            {
+                new CounterCreationData(counterName: "# images processed",
+                 counterHelp: "number of images resized",
+                 counterType: PerformanceCounterType.NumberOfItems64
+                ),
+                new CounterCreationData(counterName: "# images processed per second",
+                counterHelp: "number of images processed per second",
+                counterType: PerformanceCounterType.RateOfCountsPerSecond32)
+            };
+
+            CounterCreationDataCollection counterCollection = new CounterCreationDataCollection(counters);
+
+            PerformanceCounterCategory.Create(categoryName: categoryName,
+                categoryHelp: "Image processing information", 
+                categoryType: PerformanceCounterCategoryType.SingleInstance,
+                counterData: counterCollection);
+
+            return CreationResult.CreatedCounters;
+
+        }
+
+
+        //COUNTERS
+
+        public static void MakeThumbnail(string sourceFile, string destDir, int width, int height)
+        {
+            TotalImageCounter.Increment();
+
+            ImagesPerSecondCounter.Increment();
+
+            String filename = System.IO.Path.GetFileName(sourceFile);
+
+            String destPath = System.IO.Path.Combine(destDir, filename);
+
+            Bitmap bitmap = new Bitmap(sourceFile);
+
+            float scale = Math.Min((float)width / bitmap.Width, (float)height / bitmap.Height);
+
+            int scaleWidth = (int)(bitmap.Width * scale);
+            int scaleHeight = (int)(bitmap.Height * scale);
+
+            Bitmap resized = new Bitmap(bitmap, new Size(scaleWidth, scaleHeight));
+            resized.Save(destPath);
+        }
+
+        public static void MakeThumbnailsSeq(string sourceDir, string destDir, int width = 320, int height = 240)
+        {
+            String[] files = Directory.GetFiles(sourceDir, "*.jpg");
+
+            Directory.CreateDirectory(destDir);
+
+            foreach (string filename in files)
+            {
+                MakeThumbnail(filename, destDir, width, height);
+            }
+        }
+
+        public static void MakeThumbnailsParallel(string sourceDir, string destDir, int width = 320, int height = 240)
+        {
+            String[] files = System.IO.Directory.GetFiles(sourceDir, "*.jpg");
+
+            System.IO.Directory.CreateDirectory(destDir);
+
+            Parallel.ForEach(files, (filename) =>
+            {
+                MakeThumbnail(filename, destDir, width, height);
+            });
+        }
+
+        static void sequentialTest()
+        {
+            // sourceDir is a directory of images
+            // destDir is to the destination directory which will be automatically 
+            // created.
+
+            MakeThumbnailsSeq(sourceDir: @"..\..\..\..\images",
+                destDir: @"..\..\..\..\images\Serial"); ;
+        }
+
+        static void parallelTest()
+        {
+            MakeThumbnailsParallel(sourceDir: @"..\..\..\..\images",
+                destDir: @"..\..\..\..\images\Parallel");
+        }
+
+
     }
 }

@@ -120,3 +120,46 @@ LISTENERS TO GATHER TRACE INFORMATION
  ConsoleTraceLister
  DelimitedTextTraceLister
 
+
+
+ PROFILER
+
+   DEBUG
+     -> Profiler
+
+	 -Net Object allocation 
+	    ->Where .Net Object are allocated and when
+		 they are reclaimed by GC
+
+    -Memory Usage 
+		-> find issues like memory leak
+
+   -cpu Usage
+      ->where PCU is spending tim,e
+
+
+	-PERFORMING WIZARD
+
+	  ->CPU sampling
+	    generates enough information to indicate where you shuld investigate
+
+     -> Intrumentation
+	     -> this method works by adding extra code to capture dtailed information
+
+     -> Net memory allocation
+	    -> logs the creation and destruciton of objects in the program
+		    -> including activity garbage collector. 
+			   -> detemine whether you should create pools that allow to resuse objects
+
+	-> resource contention data
+	   -> if you creating multithread ->
+	        -> this allow to DISCOVER which methosd are being BLOCKED when working with 
+			   shared resources. 
+		-> used to identify bottleneck in performance.
+
+
+
+
+
+	 
+
