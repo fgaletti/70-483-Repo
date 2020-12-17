@@ -36,7 +36,9 @@ GLOBAL ASSEMBLY CACHE
       -> First step is to give a strong name
 
   UPDATE : same name/version
-    -> -> gacutil /i myassembly.dll
+
+  -DELETE (NO EXTENSIONS)
+    -> -> gacutil /u myassembly
 	 
 
  *CHanging ASSEMBLY'S VERSION -> gives a Brand-new Identity
@@ -53,3 +55,68 @@ GLOBAL ASSEMBLY CACHE
   PUBLISHER POLICY - ASSEMBLY BINDING REDIRECTION 
 
     
+ Test:
+
+    sn.exe -k mykeypairdll.snk 
+
+	csc.exe /keyfile:mykeypairdll.snk ClassGac.cs
+                 mykeypair.snk
+
+	//using the compiler
+
+	csc /t:library ClassGac.cs /keyfile:mykeypairdll.snk  
+
+	gacutil /i ClassGac.dll
+
+
+WINDOWS RT
+
+ -Puclic classes must me sealed
+ -no generics
+ -use winRT types for all memebr variables, fields
+ -Winrt interfaces
+ -namespcace of  a public type must match the name of the assembly
+
+
+ DEGUB
+
+ #define DIAGNOSTICS   -> DONT USE THIS , otherwise awlways been defined 
+
+ conditional compilers: DIAGNOSTICS;NORMAL   (separated by semicolon)
+
+   [Conditional("DEBUG")]
+        static void Display(string message)
+
+		-> in Release does not show message, not exception
+
+
+WARNING
+  -> COMPILE
+
+     #warning this version of library is no longer maintained
+
+PRAGMA
+ #pragma warning disable
+
+SYMBOLS SERVERS
+
+  ->DEBUG
+     -> OPTIONS
+	    -> 
+
+
+LOGGING 
+   DEBUG
+
+       Debug.WriteLine("Starting ");
+         Debug.Indent();
+         Debug.WriteLine("Inside");
+		  Debug.Unindent();
+
+ASSERT
+
+LISTENERS TO GATHER TRACE INFORMATION
+
+ ConsoleTraceLister
+ DelimitedTextTraceLister
+
