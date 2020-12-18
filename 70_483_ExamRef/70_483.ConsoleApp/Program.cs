@@ -56,8 +56,8 @@ namespace _70_483.ConsoleApp
             Console.WriteLine("21) Create Own Performance Counters   "); //293
 
             Console.WriteLine("22) Write an event log   "); //295
-
-
+            Console.WriteLine("23) Reading from event log   "); //
+            Console.WriteLine("24) Binding to the event log   "); 
 
             Console.WriteLine("99) EXIT");
             Console.Write("\r\nSelect an option: ");
@@ -418,6 +418,45 @@ namespace _70_483.ConsoleApp
                     Console.ReadKey();
                     return true;
 
+                case "23":
+                    // Reading from  event log
+
+                    string categoryName23 = "Image Processing";
+
+                    if(!EventLog.SourceExists(categoryName23))
+                    {
+                        Console.WriteLine("Event log not present");
+                    }
+                    else
+                    {
+                        EventLog imageEventLog23 = new EventLog();
+                        imageEventLog23.Source = categoryName23;
+                        foreach (EventLogEntry entry in imageEventLog23.Entries)
+                        {
+                            Console.WriteLine("Source: {0} Type: {1} Time: {2} Message: {3}",
+                                entry.Source, entry.EntryType, entry.TimeWritten, entry.Message);
+                        }
+                    }
+
+                    Console.WriteLine("finishing  Reading from  event log");
+                    Console.ReadKey();
+                    return true;
+                case "24":
+                    // Binding to event log
+
+                    string categoryName24 = "Image Processing";
+
+                    EventLog imageEventLog24 = new EventLog();
+                    imageEventLog24.Source = categoryName24;
+                    imageEventLog24.EntryWritten += ImageEventLog_EntryWritten;
+                    imageEventLog24.EnableRaisingEvents = true;
+
+                    Console.WriteLine("Listening for log events");
+                    Console.WriteLine("Press any key to exit");
+
+                    Console.WriteLine("finishing Binding to event log");
+                    Console.ReadKey();
+                    return true;
                 case "99":
                     Environment.Exit(0);
                     return true;
@@ -617,7 +656,11 @@ namespace _70_483.ConsoleApp
             return CreationResultEvent.CreatedLog;
         }
 
-
+        // Bing_ To Event Log
+        private static void ImageEventLog_EntryWritten(object sender, EntryWrittenEventArgs e)
+        {
+            Console.WriteLine(e.Entry.Message);
+        }
 
     }
 }
