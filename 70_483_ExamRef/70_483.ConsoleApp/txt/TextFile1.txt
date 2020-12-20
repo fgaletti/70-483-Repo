@@ -1,0 +1,119 @@
+﻿
+SYSTEM.IO.STREAM
+
+   ->BufferedStream
+
+   ->FileStream
+
+   ->MemoryStream
+
+   ->PipeStream
+
+   ->NetworkStream
+
+
+   FILESTREAM
+
+     ->provides a stream instance connected to a file.
+
+
+	 public enum FileMode
+
+	 Append -> Opens the file if it exists and seeks to the end of the file, or creates a new file. 
+	          This requires Append permission. FileMode.Append can be used only in conjunction with FileAccess.Write. 
+
+	Create -> Specifies that the operating system should create a new file. If the file already exists, it will be overwritten.
+	         This requires Write permission
+			  If the file already exists but is a hidden file, 
+			  an UnauthorizedAccessException exception is thrown.
+    
+	CreateNew -> Specifies that the operating system should create a new file. This requires Write permission.
+	              If the file already exists, an IOException exception is thrown.
+
+
+	Open  -> open an existing file.  A FileNotFoundException exception is thrown if the file does not exist.
+
+	OpenOrCreate -> the operating system should open a file if it exists; otherwise, a new file should be created. 
+	   If the file is opened with FileAccess.Read, Read permission is required. If the file access is FileAccess.Write, Write permission is required.
+	If the file is opened with FileAccess.ReadWrite, both Read and Write permissions are required.
+
+	Truncate -> he operating system should open an existing file. When the file is opened, it should be truncated so that its size is zero bytes. 
+	           This requires Write permission. 
+			    Attempts to read from a file opened with FileMode.Truncate 
+				cause an ArgumentException exception.
+
+
+	*CONVERT TEXT RO BYNARY DATA WITH UNICODE
+
+	 -> Stream Can only transfer Arrays of bytes to and from the storage device.
+
+	 **UNICODE -> a mapping of characters symbols to numeric values.
+	 
+	 Encoding -> converts UNICODE TEXT into an array of bytes.
+	 
+
+	 WORK WITH TEXT FILES
+
+	  -> STREAMWRITER -> extend TEXTWRITER
+
+
+
+
+
+	FILEATTRIBUTES
+
+	  -> Archive : File is not back up yet, Default  
+	               -> when back up ->Cleared 
+
+	 -> Compressed
+
+	 ->Directory
+
+	 -> Hidden
+	 -> Normal
+
+	 -> Readonly
+	 -> System
+	 -> Temporary ->
+	 
+
+FILES AND PATHS
+
+  -> PATHS -> -RELATIVE 
+             -ABSOLUTE
+
+       -> RELATIVE PATH : location that is relative to the FOLDER in which the PROGRAMM
+	                      is presently RUNNING
+
+	   -> ABSOLUTE :  
+
+
+	   PERIODS : .
+
+	      -> single . -> CUrrent Directory
+
+		  -> double . -> means the Directory Above the present one.
+
+		  *the path must "climb" up through four parents directories 
+
+	 --
+	  -> ABSOLUTE PATH -> includes the drive letter and indentifies all subdirectories
+						 in the path to a file.
+
+
+	 PATH -> contains 2 elements ->directories
+		                         -> name of the file
+
+
+
+
+
+
+WEBREQUEST
+
+
+WEBCLIENT
+ 
+  -> 
+
+
