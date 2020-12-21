@@ -1,0 +1,18 @@
+﻿ OBJECT INTIALIZER
+
+  ->create an instan of the music object
+    and initialize their values at the same time.
+ 
+ MusicTrack newTrack = new MusicTrack()
+                            {
+                                Artist = artistObj,
+
+
+
+LINQ
+
+    group track by track.ArtistID
+
+	   -->  select new
+           { ID = artistTrackSummary.Key,
+
