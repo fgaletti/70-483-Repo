@@ -4,6 +4,8 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Xml;
+using System.Xml.Linq;
 
 namespace _70_483.ConsoleApp
 {
@@ -24,6 +26,9 @@ namespace _70_483.ConsoleApp
             Console.WriteLine("Choose an option:");
             Console.WriteLine("1) Musick track classes List, Liq Operator, Progression, anonymous");
             Console.WriteLine("2) Linq GROUP");
+            Console.WriteLine("3) Method Base ");
+            Console.WriteLine("4) Sample Xml");
+            Console.WriteLine("5) Created Xml Linq");
             Console.WriteLine("99) EXIT");
             Console.Write("\r\nSelect an option: ");
            
@@ -142,7 +147,7 @@ namespace _70_483.ConsoleApp
                             musicTracksLists2.Add(newTrack);
                         }
                     }
-
+                    // end fill out
                     //Group By
 
                     var artistSummary = from track in musicTracksLists2
@@ -239,6 +244,177 @@ namespace _70_483.ConsoleApp
 
 
                     Console.WriteLine("finishing processing");
+                    Console.ReadKey();
+                    return true;
+
+                case "3":
+                    //method base
+                    //fillout data
+                    string[] artistNames3 = new string[] { "Rob Miles", "Fred Bloggs", "The Bloggs Singers", "Immy Brown" };
+                    string[] titleNames3= new string[] { "My Way", "Your Way", "His Way", "Her Way", "Milky Way" };
+
+                    List<ArtistJoin> artistsList3 = new List<ArtistJoin>();
+                    List<MusicTrackJoin> musicTracksLists3 = new List<MusicTrackJoin>();
+
+                    Random rand3 = new Random(1);
+                    int IDcount3 = 0;
+
+                    foreach (string artistName in artistNames3)
+                    {
+                        ArtistJoin newArtist = new ArtistJoin { ID = IDcount3++, Name = artistName };
+                        artistsList3.Add(newArtist);
+                        foreach (string titleName in titleNames3)
+                        {
+                            MusicTrackJoin newTrack = new MusicTrackJoin
+                            {
+                                ID = IDcount3++,
+                                ArtistID = newArtist.ID,
+                                Title = titleName,
+                                Length =  rand3.Next(20, 600) // change to 1 to test Sum 
+                            };
+                            musicTracksLists3.Add(newTrack);
+                        }
+                    }
+                    // end fill out
+
+                    var artistSummary3 = musicTracksLists3.Join(
+                           artistsList3, //inner
+                           track => track.ArtistID, // outter Key Selector
+                           artist => artist.ID, // inner Key selector
+                           (track, artist) => // result
+                             new
+                             {
+                                 track = track,
+                                 artist = artist
+                             }
+                            )
+                            .GroupBy(
+                             temp0 => temp0.artist.Name,
+                             temp0 => temp0.track
+                           )
+                           .Select(
+                           artistTrackSummary3 =>
+                              new
+                              {
+                                  ID = artistTrackSummary3.Key,
+                                  Length = artistTrackSummary3.Sum(x => x.Length)
+                              }
+                        );
+
+                    foreach (var item in artistSummary3)
+                    {
+                        Console.WriteLine("Artist: {0} Tracks: {1}", item.ID, item.Length);
+                    }
+
+                    Console.WriteLine("finishing method base");
+                    Console.ReadKey();
+                    return true;
+
+                case "4":
+                    //Read Xml Linq
+                    string XmlText = "" +
+                        " <MusicTracks> " +
+                            "<MusicTrack> " +
+                                "<Artist>Rob Miles</Artist> " +
+                                "<Title>My Way </Title> " +
+                                "<Length>150</Length>" +
+                            "</MusicTrack>" +
+
+                             "<MusicTrack> " +
+                                "<Artist> Immi</Artist> " +
+                                "<Title>Her Way </Title> " +
+                                "<Length>200</Length>" +
+                            "</MusicTrack>" +
+                    "</MusicTracks> ";
+
+                    //System.Xml.Liq
+                    XDocument musicTrackDocument = XDocument.Parse(XmlText);
+
+                    IEnumerable<XElement> selectedTracksXml = from track in
+                                                         musicTrackDocument.Descendants("MusicTrack")
+                                                           select track;
+
+                    foreach (XElement item in selectedTracksXml)
+                    {
+                        Console.WriteLine("Artist: {0} Title: {1}",
+                                       item.Element("Artist").FirstNode,
+                                       item.Element("Title").FirstNode);
+                    }
+                    // -------------------------
+
+                    //FILTER XML
+                    Console.WriteLine();
+                    Console.WriteLine("Filter XML");
+
+                    IEnumerable<XElement> selTrackFilter =
+                        from track in musicTrackDocument.Descendants("MusicTrack")
+                        where (string)track.Element("Artist") == "Rob Miles"
+                        select track;
+
+                    foreach (XElement item in selTrackFilter)
+                    {
+                        Console.WriteLine("Artist: {0} Title: {1}",
+                                       item.Element("Artist").FirstNode,
+                                       item.Element("Title").FirstNode);
+                    }
+                    //-----------------------------
+
+                    // METHOD BASE LINQ-XML
+                    //FILTER XML
+                    Console.WriteLine();
+                    Console.WriteLine("Method-base XML");
+                    IEnumerable<XElement> selectedMethodXml = musicTrackDocument.Descendants("MusicTrack")
+                                                .Where(element => (string)element.Element("Artist") == "Rob Miles");
+
+                    foreach (XElement item in selTrackFilter)
+                    {
+                        Console.WriteLine("Artist: {0} Title: {1}",
+                                       item.Element("Artist").FirstNode,
+                                       item.Element("Title").FirstNode);
+                    }
+                    //--------------------------------
+
+                    Console.WriteLine("finishing Read Xml Linq");
+                    Console.ReadKey();
+                    return true;
+
+                case "5":
+                    //Create XML with LINQ
+
+                    XElement musicTracksCreated = new XElement("MusicTracks",
+                          new List<XElement>
+                          {
+                              new XElement("MusicTrack",
+                                new XElement("Artist", "Rob Miles"),
+                                new XElement("Title", "my Way")),
+                              new XElement("MusicTrack",
+                                 new XElement("Artist", "Immy"),
+                                 new XElement("Title", "Her Way"))
+                          }
+                        );
+
+                    IEnumerable<XElement> seletedToModify = from trackModif in musicTracksCreated.Descendants("MusicTrack")
+                                                            where (string)trackModif.Element("Title") == "my Way"
+                                                            select trackModif;//.Element("Title");
+
+                    foreach (XElement item in seletedToModify)
+                    {
+                        item.Element("Title").FirstNode.ReplaceWith("My Wayy");
+                    }
+
+                    //Add New ELEMENT
+                    IEnumerable<XElement> selectedNew = from trackNew in musicTracksCreated.Descendants("MusicTrack")
+                                                        where trackNew.Element("Style") == null
+                                                        select trackNew;
+
+                    foreach (XElement item in selectedNew)
+                    {
+                        item.Add(new XElement("Style", "Rock"));
+                    }
+
+                    Console.WriteLine(musicTracksCreated.ToString());
+
+                    Console.WriteLine("finishing Create XML with LINQ");
                     Console.ReadKey();
                     return true;
                 case "99":
