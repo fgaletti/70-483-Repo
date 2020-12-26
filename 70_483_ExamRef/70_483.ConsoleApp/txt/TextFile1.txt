@@ -1,0 +1,20 @@
+﻿
+
+LIST :
+   -> need to store a List of Values
+
+ARRAY
+  -> concenrned about PERFORMANCE
+     Holding VALUE TYPES
+
+ ->TWO DIMENSIONAL data
+     -> values made up of -> ROWS, COLUMNS
+	 
+
+DICTIONARY 
+   -> if you nneed to locate a data value 
+      BASED ON key
+
+SET
+  -> useful working with tags
+
