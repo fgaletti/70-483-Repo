@@ -28,7 +28,7 @@ namespace _70_483.ConsoleApp
            // Thread.Sleep(1000);
             Console.WriteLine("finishing working on :" + item);
         }
-
+        // parallel LINQ , 4 
         public class Person
         {
             public string Name { get; set; }

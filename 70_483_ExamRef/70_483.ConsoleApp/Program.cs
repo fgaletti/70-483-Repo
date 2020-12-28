@@ -90,12 +90,21 @@ namespace _70_483.ConsoleApp
                     return true;
 
                 case "2":
+                    //Parallel foreach
                     var items = Enumerable.Range(0, 500);
                     Parallel.ForEach(items, item =>
                     {
                         ParallelClass.WorkOnItem(item);
                     });
-                    Console.WriteLine("Finishing Processing");
+
+                    string[] itemsString = new string[] { "Uno", "Dos", "Tres", "Cuatro" };
+
+                    Parallel.ForEach(itemsString, itemStr =>
+                    {
+                        Console.WriteLine("Item: {0}", itemStr);
+                    });
+
+                    Console.WriteLine("Finishing Parallel foreach");
                     Console.ReadKey();
                     return true;
 
@@ -108,12 +117,19 @@ namespace _70_483.ConsoleApp
                         ParallelClass.WorkOnItem(items2[i]);
                     });
 
-                    Console.WriteLine("Finishing Processing");
+                    string[] itemsString3 = new string[] { "Uno", "Dos", "Tres", "Cuatro" };
+
+                    Parallel.For(0, itemsString3.Length, i =>
+                    {
+                        Console.WriteLine("Item for: {0}", itemsString3[i]);
+                    });
+
+                    Console.WriteLine("Finishing FOR");
                     Console.ReadKey();
                     return true;
 
                 case "4":
-
+                    // Parallel LINQ
 
                     var result = from person in people.AsParallel()
                                  where person.City == "Seattle"
@@ -123,7 +139,7 @@ namespace _70_483.ConsoleApp
                     {
                         Console.WriteLine(person.Name);
                     }
-                    Console.WriteLine("Finishing Processing");
+                    Console.WriteLine("Finishing Parallel LINQ");
                     Console.ReadKey();
                     return true;
 
@@ -159,14 +175,24 @@ namespace _70_483.ConsoleApp
                 case "6":
                     // AsOrdered
                     //  // excuted the query in order
-                    var result3 = from person in people.AsParallel().AsOrdered()
+                    var result3 = from person in people.AsParallel().AsOrdered() //.Reverse()
                                   where person.City == "Seattle"
+                                  //orderby person.Name
                                   select person;
 
                     foreach (var person in result3)
                     {
                         Console.WriteLine(person.Name);
                     }
+
+
+
+                    var listPerson = from porden in people.AsParallel().AsOrdered().Reverse()
+                                     where porden.City == "London"
+                                     select porden;
+
+
+
                     Console.WriteLine("Finishing Ordered");
                     Console.ReadKey();
                     return true;
@@ -228,7 +254,12 @@ namespace _70_483.ConsoleApp
                                       select person;
 
 
-                        result9.ForAll(person => Console.WriteLine(person.Name));
+                           result9.ForAll(person => Console.WriteLine(person.Name));
+
+                        //Parallel.ForEach(result9, item =>
+                        //{
+                        //    Console.WriteLine(item.Name);
+                        //});
                     }
                     catch (AggregateException e)
                     {
@@ -247,6 +278,15 @@ namespace _70_483.ConsoleApp
                     {
                         return TaskClass.CalculateResult();
                     });
+
+
+                    Task<string> taskStr = Task.Run(() =>
+                   {
+                       return "Resturn task";
+                   });
+
+                    Console.WriteLine(taskStr.Result); //return string
+
                     Console.WriteLine( task.Result);
                     Console.WriteLine("Finishing return");
                     Console.ReadKey();
@@ -357,6 +397,7 @@ namespace _70_483.ConsoleApp
                     });
 
                     thread17.Start();
+
 
                     Console.WriteLine("Finishing Thread Lambda Expression");
                     Console.ReadKey();
@@ -486,7 +527,8 @@ namespace _70_483.ConsoleApp
                     });
 
                     t1.Start();
-                    t2.Start();
+                    Thread.Sleep(2000); // different values
+                   // t2.Start();
                     Console.ReadKey();
 
                     Console.WriteLine("Finishing Thread Data Storage and ThreadLocal");
@@ -584,6 +626,44 @@ namespace _70_483.ConsoleApp
                     {
                         Console.WriteLine("Dequeue: {0}", str);
                     }
+
+                    //example 2
+                    ConcurrentQueue<int> cq = new ConcurrentQueue<int>();
+
+                    // Populate the queue.
+                    for (int i = 0; i < 5; i++)
+                    {
+                        cq.Enqueue(i);
+                    }
+
+                    // Peek at the first element.
+                    int result27;
+                    if (!cq.TryPeek(out result27))
+                    {
+                        Console.WriteLine("CQ: TryPeek failed when it should have succeeded");
+                    }
+                    else if (result27 != 0)
+                    {
+                        Console.WriteLine("CQ: Expected TryPeek result of 0, got {0}", result27);
+                    }
+
+
+                    int outerSum = 0;
+                    // An action to consume the ConcurrentQueue.
+                    Action action = () =>
+                    {
+                        int localSum = 0;
+                        int localValue;
+                        while (cq.TryDequeue(out localValue))
+                            localSum += localValue;
+
+                       // outerSum = localSum;
+                        Interlocked.Add(ref outerSum, localSum);
+                    };
+
+                    // Start 4 concurrent consuming actions.
+                    Parallel.Invoke(action, action, action, action);
+                    Console.WriteLine("outerSum = {0}, should be 49995000", outerSum);
 
                     Console.ReadKey();
                     Console.WriteLine("Finishing ConcurrentQueue");
