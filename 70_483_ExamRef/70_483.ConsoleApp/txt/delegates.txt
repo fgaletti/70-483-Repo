@@ -83,8 +83,10 @@ Delagates
 
 	-GETINVOCATIONLIST ->
 	       Used on the delegate to obtain a list of subscribers to the event
+		    foreach (Delegate handler in OnAlarmRaised.GetInvocationList())
+			    handler.DynamicInvoke(this, new AlarmEventArgs(location));
 
-		  -> DynamicInvoke -> called for each subscriber
+		       -> DynamicInvoke -> called for each subscriber
 
 			 ->TypeInvocationException 
 
