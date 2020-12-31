@@ -56,6 +56,9 @@ namespace _70_483.ConsoleApp
             Console.WriteLine("20)  FormatProvider");// 192
             Console.WriteLine("21)  Interpolation");// 192
 
+            Console.WriteLine("22)  Encaptulation via ");// 136
+
+
             Console.WriteLine("99) EXIT");
             Console.Write("\r\nSelect an option: ");
 
@@ -475,12 +478,21 @@ namespace _70_483.ConsoleApp
                     //Interpolation
 
                     string name21 = "Ron";
-                    int age = 21;
+                    int age = 2564;
 
-                    Console.WriteLine("YourName is {0} and your age is {1,-5:D}", name21, age);
+                    Console.WriteLine("YourName is {0} and your age is {1,8:D}", name21, age);
 
-                    Console.WriteLine($"YourName is {name21} and your age is {age, -5:D}");
+                    Console.WriteLine($"YourName is {name21} and your age is {age, -2:D}");
                     Console.WriteLine($"YourName is {name21} and your age is {age}");
+
+                    // new
+
+                    decimal[] amounts = { 16305.32m, 18794.16m };
+                    Console.WriteLine("   Beginning Balance           Ending Balance");
+                    Console.WriteLine("   {0,-17:C2} {1}", amounts[0] , "after"); //spaces after , to the right
+
+                    //Console.WriteLine("   {0,-28:C2}{1,14:C2}", amounts[0], amounts[1]);
+
 
                     double bankBalance21 = 124.54;
                     //FormattableString balanceMessage = $"US balance: {bankBalance21:C}";
@@ -489,6 +501,23 @@ namespace _70_483.ConsoleApp
                     Console.WriteLine(balanceMessage.ToString(usProvider21));
 
                     Console.WriteLine("finishing Interpolation");
+                    Console.ReadKey();
+                    return true;
+
+                case "22":
+                    //Encapsulation via Interface
+
+                    Report myReport = new Report();
+                    // myReport  -> does not have the methods of the interface
+
+                    IPrintable printItem = myReport;
+                    printItem.GetPrintableText(5, 6); // now we can implement the interface
+
+
+                    // implement Idispley
+                    IDisplay displaydItem = myReport;
+                    displaydItem.GetTitle(); // implement Idisplay
+                    Console.WriteLine("finishing Encapsulation via Interface");
                     Console.ReadKey();
                     return true;
                 case "99":
@@ -783,6 +812,40 @@ namespace _70_483.ConsoleApp
         {
             Artist = artist;
             Title = title;
+        }
+    }
+
+    //Interface Encapsulation
+    interface IPrintable
+    {
+        string GetPrintableText(int pageWidth, int pageHeight);
+        string GetTitle();
+    }
+
+    interface IDisplay
+    {
+        string GetTitle();
+    }
+
+    public class Report : IPrintable , IDisplay
+    {
+        //public string GetPrintableText(int pageWidth, int pageHeight)
+        //{
+        //    return "GetPrintableText from  report";
+        //}
+         string IPrintable.GetPrintableText(int pageWidth, int pageHeight)
+        {
+            return "Report text to be printed";
+        }
+
+         string IPrintable.GetTitle()
+        {
+            return "Report title to be printed";
+        }
+
+        string IDisplay.GetTitle()
+        {
+            return "Report title to be displayed";
         }
     }
 
