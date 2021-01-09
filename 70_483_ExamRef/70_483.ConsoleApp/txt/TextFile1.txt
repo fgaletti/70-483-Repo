@@ -158,7 +158,20 @@ LISTENERS TO GATHER TRACE INFORMATION
 		-> used to identify bottleneck in performance.
 
 
+  create PerformanceCounterCategory
 
+1. PerformanceCounterCategory 
+      counterData -> counterCollection
+
+2.    CounterCreationDataCollection counterCollection
+
+   3.    -> new    CounterCreationData    (counterName: "# images processed",
+                 counterHelp: "number of images resized",
+                 counterType: PerformanceCounterType.NumberOfItems64
+ 
+ 4. Create the PerformanceCounter
+ 
+   new PerformanceCounter(categoryName: categoryName
 
 
 	 

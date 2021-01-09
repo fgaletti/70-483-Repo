@@ -79,8 +79,8 @@ namespace _70_483.ConsoleApp
                     return true;
                 case "2":
                     // test dll version
-                    DllGac.ClassGac clGac = new DllGac.ClassGac();
-                    Console.WriteLine(clGac.getValueFromGac());
+                    //DllGac.ClassGac clGac = new DllGac.ClassGac();
+                    //Console.WriteLine(clGac.getValueFromGac());
 
                     Console.WriteLine("finishing gac");
                     Console.ReadKey();
@@ -207,7 +207,11 @@ namespace _70_483.ConsoleApp
                     Debug.Assert(!string.IsNullOrEmpty(customer12));
 
                      customer12 = "";
+
+                    Trace.Assert(!string.IsNullOrEmpty(customer12)); // assert with trace
+
                     Debug.Assert(!string.IsNullOrEmpty(customer12));
+
 
                     Console.WriteLine("finishing assert");
                     Console.ReadKey();
@@ -369,6 +373,7 @@ namespace _70_483.ConsoleApp
                     {
                         Console.WriteLine("Performance counters created");
                         Console.WriteLine("Restart program");
+
                         Console.ReadKey();
                         return true;
                     }
