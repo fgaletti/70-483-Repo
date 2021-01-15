@@ -390,3 +390,8 @@ public static class TypeOfExample
 
 	 - String Interpolation LITERAL -> produces -> FormattedString
 
+
+	 ----------------
+
+	 https://www.codeproject.com/Articles/18676/Dynamic-Code-Generation-using-CodeDOM
+

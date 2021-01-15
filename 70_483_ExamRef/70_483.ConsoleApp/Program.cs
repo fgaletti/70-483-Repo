@@ -58,7 +58,7 @@ namespace _70_483.ConsoleApp
 
             Console.WriteLine("22)  Encaptulation via ");// 136
 
-
+            Console.WriteLine("23)  CodeDom 2  ");// 169
             Console.WriteLine("99) EXIT");
             Console.Write("\r\nSelect an option: ");
 
@@ -248,8 +248,16 @@ namespace _70_483.ConsoleApp
                     personClass.IsClass = true;
                     personClass.TypeAttributes = TypeAttributes.Public; //system.reflection
 
+                    //class 2 
+                    CodeTypeDeclaration orderClass = new CodeTypeDeclaration("Order");
+                    orderClass.IsClass = true;
+                    personClass.TypeAttributes = TypeAttributes.Sealed;
+
+
                     //Add personClass to NameSpace
                     personnelNameSpace.Types.Add(personClass);
+
+                    personnelNameSpace.Types.Add(orderClass);
 
                     //create a field to hold the name of the Person
                     CodeMemberField nameField = new CodeMemberField("String", "name");
@@ -258,6 +266,7 @@ namespace _70_483.ConsoleApp
                     // add the name field to thr Person Class
                     personClass.Members.Add(nameField);
 
+                   
                     //add the nameSpace to the Document
                     compilerUnit.Namespaces.Add(personnelNameSpace);
 
@@ -518,6 +527,86 @@ namespace _70_483.ConsoleApp
                     IDisplay displaydItem = myReport;
                     displaydItem.GetTitle(); // implement Idisplay
                     Console.WriteLine("finishing Encapsulation via Interface");
+                    Console.ReadKey();
+                    return true;
+
+                case "23":
+                    //CodeDom2
+                    CodeCompileUnit compileUnit23 = new CodeCompileUnit();
+
+                    // namespace to hold the types we are going to create
+                    CodeNamespace nameSpace = new CodeNamespace("Personel");
+
+                    //import the system namespace
+                    nameSpace.Imports.Add(new CodeNamespaceImport("System"));
+
+                    // creae a person class
+                    CodeTypeDeclaration person23 = new CodeTypeDeclaration("Person");
+                    person23.IsClass = true;
+                    person23.TypeAttributes = System.Reflection.TypeAttributes.Public;
+
+                    //Add the person class to namespace
+                    nameSpace.Types.Add(person23);
+
+                    // create a field to hold the name of the person
+                    CodeMemberField nameField23 = new CodeMemberField("String", "name");
+                    nameField23.Attributes = MemberAttributes.Private;
+
+                    //add the name field to the person class
+                    person23.Members.Add(nameField23);
+
+                    // add the nameSpace to the document
+                    compileUnit23.Namespaces.Add(nameSpace);
+
+                    // ----  class order  ---*/
+                    // creae a person class
+                    CodeTypeDeclaration classOrder = new CodeTypeDeclaration("Order");
+                    classOrder.IsClass = true;
+                    classOrder.TypeAttributes = System.Reflection.TypeAttributes.Public;
+
+                    CodeMemberField idOrder = new CodeMemberField("Int", "id");
+                    idOrder.Attributes = MemberAttributes.Private;
+
+                    // add the field
+                    classOrder.Members.Add(idOrder);
+
+                    CodeMemberMethod orderMethodGetId = new CodeMemberMethod();
+                    orderMethodGetId.Name = "orderMethodGetId";
+                    orderMethodGetId.ReturnType = new CodeTypeReference("System.string");
+                    orderMethodGetId.Parameters.Add(new CodeParameterDeclarationExpression("System.String", "Text"));
+
+                    // add method to class
+                    classOrder.Members.Add(orderMethodGetId); // codememberMethod is of Type  CodeTypeMember
+
+                    // add constructor
+                    CodeConstructor constructor  = new CodeConstructor();//Create constructor
+                    constructor.Attributes = MemberAttributes.Public;
+                    classOrder.Members.Add(constructor);//Add constructor to class
+                    
+                    nameSpace.Types.Add(classOrder);
+
+
+                    // **** 2 PART ***
+                    // create a provider to parse the document
+                    CodeDomProvider provider23 = CodeDomProvider.CreateProvider("CSharp");
+                    // give the provider somewhere to send and parsed output
+
+                    /**/
+
+                    StringWriter s23 = new StringWriter();
+
+                    //some options for the pase - we can use defaults
+                    CodeGeneratorOptions options23 = new CodeGeneratorOptions();
+
+                    // generate the C# source from the CodeDOM
+                    provider23.GenerateCodeFromCompileUnit(compileUnit23, s23, options23);
+                    s23.Close();
+
+                    // print the C# output
+                    Console.WriteLine(s23.ToString());
+              
+                 
+                    Console.WriteLine("finishing CodeDom 2");
                     Console.ReadKey();
                     return true;
                 case "99":
